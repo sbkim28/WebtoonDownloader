@@ -18,4 +18,12 @@ public class NaverComicInfo extends ComicInfo {
     public String getImage() {
         return image;
     }
+
+
+    @Override
+    public String toString() {
+        return "NaverComicInfo{" +
+                "image='" + image + '\'' +
+                '}';
+    }
 }

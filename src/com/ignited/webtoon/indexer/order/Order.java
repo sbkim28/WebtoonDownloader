@@ -1,4 +1,4 @@
-package com.ignited.webtoon.util;
+package com.ignited.webtoon.indexer.order;
 
 import java.io.File;
 import java.util.Arrays;

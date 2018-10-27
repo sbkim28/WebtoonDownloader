@@ -1,8 +1,8 @@
 package com.ignited.webtoon.view;
 
 import com.ignited.webtoon.indexer.FileIndexReader;
-import com.ignited.webtoon.util.Order;
-import com.ignited.webtoon.util.Sortable;
+import com.ignited.webtoon.indexer.order.Order;
+import com.ignited.webtoon.indexer.order.Sortable;
 
 import java.io.File;
 import java.io.IOException;

@@ -11,37 +11,44 @@ public class RUN {
 
     public static void main(String[] args) {
 
-        if(args == null || args.length == 0){
-            System.out.println("-d : download (-d <comictype[daum, naver]> <name> <path> (<index>))");
-            System.out.println("-do : download one chapter (-do <comictype[daum, naver]> <name> <path> <index>");
-            System.out.println("-i : create index file (-i <path>");
-            System.out.println("-r : read (-r <path> <page>)");
-            System.exit(1);
+        if (args == null || args.length == 0) {
+            printInfo();
         }
-
-        if(args[0].equals("-d") && (args.length == 4 || args.length == 5)){
-            if(args.length == 4){
-                downlaod(args[1], args[2], args[3]);
-            }else {
-                downlaod(args[1], args[2], args[3], args[4]);
+        try {
+            if (args[0].equals("-d") && (args.length == 4 || args.length == 5)) {
+                if (args.length == 4) {
+                    downlaod(args[1], args[2], args[3]);
+                } else {
+                    downlaod(args[1], args[2], args[3], args[4]);
+                }
+            } else if (args[0].equals("-r") && args.length == 3) {
+                read(args[1], args[2]);
+            } else if (args[0].equals("-do") && args.length == 5) {
+                downlaodOnly(args[1], args[2], args[3], args[4]);
+            } else if (args[0].equals("-i") && args.length == 2) {
+                index(args[1]);
+            } else {
+                printInfo();
             }
-        }else if(args[0].equals("-r") && args.length == 3){
-            read(args[1], args[2]);
-        }else if(args[0].equals("-do") && args.length == 5) {
-            downlaodOnly(args[1], args[2], args[3], args[4]);
-        }else if(args[0] .equals("-i") && args.length == 2) {
-            index(args[1]);
-        }else{
-            System.out.println("-d : download (-d <comictype[daum, naver]> <name> <path> (<index>))");
-            System.out.println("-do : download one chapter (-do <comictype[daum, naver]> <name> <path> <index>");
-            System.out.println("-i : create index file (-i <path>");
-            System.out.println("-r : read (-r <path> <page>)");
+        }catch (IOException e){
+            e.printStackTrace();
             System.exit(1);
+        }catch (ArrayIndexOutOfBoundsException e){
+            System.err.println("Invalid Parameter");
+            printInfo();
         }
     }
 
+    public static void printInfo(){
+        System.out.println("-d : download (-d <comictype[daum, naver]> <name> <path> (<index>))");
+        System.out.println("-do : download one chapter (-do <comictype[daum, naver]> <name> <path> <index>");
+        System.out.println("-i : create index file (-i <path>");
+        System.out.println("-r : read (-r <path> <page>)");
+        System.exit(1);
+    }
 
-    public static void downlaod(String type, String name, String path){
+
+    public static void downlaod(String type, String name, String path) throws IOException {
         if(type.equalsIgnoreCase("naver")) {
             ComicWriteManager.execute(ComicTypeFactory.NAVER, name, path);
         }else if (type.equalsIgnoreCase("daum")) {
@@ -51,7 +58,7 @@ public class RUN {
         }
     }
 
-    public static void downlaod(String type, String name, String path, String index){
+    public static void downlaod(String type, String name, String path, String index) throws IOException {
         if(type.equalsIgnoreCase("naver")) {
             ComicWriteManager.execute(ComicTypeFactory.NAVER, name, path, Integer.parseInt(index));
         }else if (type.equalsIgnoreCase("daum")) {
@@ -61,7 +68,7 @@ public class RUN {
         }
     }
 
-    public static void downlaodOnly(String type, String name, String path, String index){
+    public static void downlaodOnly(String type, String name, String path, String index) throws IOException {
         if(type.equalsIgnoreCase("naver")) {
             ComicWriteManager.executeOne(ComicTypeFactory.NAVER, name, path, Integer.parseInt(index));
         }else if (type.equalsIgnoreCase("daum")) {
@@ -71,7 +78,7 @@ public class RUN {
         }
     }
 
-    public static void index(String path){
+    public static void index(String path) throws IOException {
         ComicWriteManager.setIndex(path);
     }
 

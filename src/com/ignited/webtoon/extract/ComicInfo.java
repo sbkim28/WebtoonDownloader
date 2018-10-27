@@ -16,4 +16,12 @@ public class ComicInfo {
     public String getTitle() {
         return title;
     }
+
+    @Override
+    public String toString() {
+        return "ComicInfo{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                '}';
+    }
 }

@@ -1,5 +1,6 @@
 package com.ignited.webtoon.extract;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +8,7 @@ public abstract class Finder{
 
     private List<ComicInfo> items;
 
-    public Finder() {
+    public Finder() throws IOException {
         items = this.initialize();
     }
 
@@ -39,5 +40,5 @@ public abstract class Finder{
         return ret;
     }
 
-    protected abstract List<ComicInfo> initialize();
+    protected abstract List<ComicInfo> initialize() throws IOException;
 }

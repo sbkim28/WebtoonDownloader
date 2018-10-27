@@ -1,7 +1,7 @@
 package com.ignited.webtoon.translator;
 
-public interface Translator<T> {
+public interface Translator extends Runnable{
 
-    T translate();
+    String translate();
 
 }

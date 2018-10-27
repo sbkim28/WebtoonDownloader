@@ -1,7 +1,7 @@
 package com.ignited.webtoon.indexer;
 
-import com.ignited.webtoon.util.Order;
-import com.ignited.webtoon.util.Sortable;
+import com.ignited.webtoon.indexer.order.Order;
+import com.ignited.webtoon.indexer.order.Sortable;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +33,7 @@ public abstract class FileIndexer implements Indexer{
     }
 
     @Override
-    public void setIndex() {
+    public void setIndex() throws IOException {
         File[] files = root.listFiles();
         if (files != null) {
             files = order.sort(files);
@@ -46,5 +46,5 @@ public abstract class FileIndexer implements Indexer{
         }
     }
 
-    abstract protected void writeIndex(List<String> names);
+    abstract protected void writeIndex(List<String> names) throws IOException;
 }
