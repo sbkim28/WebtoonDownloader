@@ -1,13 +1,16 @@
 package com.ignited.webtoon.comp.naver.comic;
 
-import com.ignited.webtoon.extract.ComicSaver;
-import com.ignited.webtoon.extract.Downloader;
-import com.ignited.webtoon.extract.ImageLoader;
-import com.ignited.webtoon.extract.ReadDocument;
+import com.ignited.webtoon.extract.*;
+import com.ignited.webtoon.extract.comic.Downloader;
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
 
+/**
+ * NaverComicDownloader
+ * @author Ignited
+ * @see com.ignited.webtoon.extract.comic.Downloader
+ */
 public class NaverComicDownloader extends Downloader {
 
     private final String detailUrl = "https://comic.naver.com/webtoon/detail.nhn";
@@ -25,8 +28,26 @@ public class NaverComicDownloader extends Downloader {
 
 
     private int size;
-    private ReadDocument doc;
+    /**
+     * The Html Document
+     */
+    protected ReadDocument doc;
 
+    /**
+     * Instantiates a new Naver comic downloader.
+     *
+     * @param info the information about naver webtoon
+     */
+    public NaverComicDownloader(NaverComicInfo info) {
+        this(info, null);
+    }
+
+    /**
+     * Instantiates a new Naver comic downloader.
+     *
+     * @param info the information about naver webtoon
+     * @param path the location where the webtoon will be saved
+     */
     public NaverComicDownloader(NaverComicInfo info, String path){
         super(info, path);
         this.saver = new NaverComicSaver(path);

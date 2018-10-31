@@ -3,17 +3,24 @@ package com.ignited.webtoon.comp.daum.comic;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.ignited.webtoon.extract.ComicInfo;
-import com.ignited.webtoon.extract.Finder;
+import com.ignited.webtoon.extract.comic.ComicInfo;
+import com.ignited.webtoon.extract.comic.Finder;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+
+/**
+ * DaumComicFinder
+ *
+ * Find Daum Webtoons
+ *
+ * @author Ignited
+ * @see com.ignited.webtoon.extract.comic.Finder
+ */
 public class DaumComicFinder extends Finder{
 
     private final String urlFinished = "http://webtoon.daum.net/data/pc/webtoon/list_finished/?genre_id=";
@@ -21,6 +28,11 @@ public class DaumComicFinder extends Finder{
 
     private String[] day;
 
+    /**
+     * Instantiates a new Daum comic finder.
+     *
+     * @throws IOException when it failed to initialize.
+     */
     public DaumComicFinder() throws IOException {
         super();
     }

@@ -3,4 +3,5 @@ _tmp/
 out/
 src/META-INF/
 src/com/ignited/webtoon/comp/naver/data
+src/com/ignited/webtoon/comp/daum/data
 src/com/ignited/TEST.java

@@ -5,21 +5,49 @@ import com.ignited.webtoon.util.Compatamizer;
 
 import java.io.*;
 
+/**
+ * HTMLTranslator
+ *
+ * Translate Image Files into HTML Files
+ * @author Ignited
+ * @see com.ignited.webtoon.translator.FileTranslator
+ */
 public class HTMLTranslator extends FileTranslator {
 
     private String title;
     private String background;
 
+    /**
+     * Instantiates a new Html translator.
+     *
+     * @param files      the image files
+     * @param writeOn    the directory translated file will be located at
+     * @param title      the html title
+     * @param background the html background
+     */
     public HTMLTranslator(File[] files, File writeOn, String title, String background) {
         super(files, writeOn);
         this.title = title;
         this.background = background;
     }
 
+    /**
+     * Instantiates a new Html translator.
+     * Background will be black
+     *
+     * @param files   the image files
+     * @param writeOn the directory translated file will be located at
+     * @param title   the html title
+     */
     public HTMLTranslator(File[] files, File writeOn, String title) {
         this(files,writeOn,title,"000000");
     }
 
+    /**
+     * Sets background color.
+     *
+     * @param background the background color
+     */
     public void setBackground(String background) {
         this.background = background;
     }

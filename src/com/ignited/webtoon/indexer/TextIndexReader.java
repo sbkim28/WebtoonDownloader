@@ -6,14 +6,36 @@ import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
 
+
+/**
+ * TextIndexReader
+ *
+ * Read Text Index File
+ *
+ * @author Ignited
+ * @see com.ignited.webtoon.indexer.FileIndexReader
+ */
 public class TextIndexReader implements FileIndexReader {
 
+    /**
+     * The directory containing Index file.
+     */
     protected File root;
 
+    /**
+     * Instantiates a new Text index reader.
+     *
+     * @param path the directory containing Index File
+     */
     public TextIndexReader(String path){
         this(new File(path));
     }
 
+    /**
+     * Instantiates a new Text index reader.
+     *
+     * @param root the directory containing Index File
+     */
     public TextIndexReader(File root) {
         if(!root.exists()||!root.isDirectory()) throw new IllegalArgumentException("Not a Directory");
         this.root = root;

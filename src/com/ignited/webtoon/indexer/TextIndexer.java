@@ -6,19 +6,56 @@ import java.io.*;
 import java.nio.file.Files;
 import java.util.List;
 
+
+/**
+ * TextIndexer
+ *
+ * Create Text Index File
+ *
+ * @author Ignited
+ * @see com.ignited.webtoon.indexer.FileIndexer
+ */
+
 public class TextIndexer extends FileIndexer{
+
+    /**
+     * Instantiates a new Text indexer.
+     *
+     * @param path the directory
+     * @throws IOException if file is not directory
+     */
     public TextIndexer(String path) throws IOException {
         super(path);
     }
 
+    /**
+     * Instantiates a new Text indexer.
+     *
+     * @param path  the directory
+     * @param order the sorting order
+     * @throws IOException if file is not directory
+     */
     public TextIndexer(String path, Sortable<File> order) throws IOException {
         super(path, order);
     }
 
+    /**
+     * Instantiates a new Text indexer.
+     *
+     * @param root the directory
+     * @throws IOException if file is not directory
+     */
     public TextIndexer(File root) throws IOException {
         super(root);
     }
 
+    /**
+     * Instantiates a new Text indexer.
+     *
+     * @param root  the directory
+     * @param order the sorting order
+     * @throws IOException if file is not directory
+     */
     public TextIndexer(File root, Sortable<File> order) throws IOException {
         super(root, order);
     }

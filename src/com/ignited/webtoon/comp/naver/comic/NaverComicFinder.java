@@ -1,16 +1,23 @@
 package com.ignited.webtoon.comp.naver.comic;
 
-import com.ignited.webtoon.extract.ComicInfo;
-import com.ignited.webtoon.extract.Finder;
+import com.ignited.webtoon.extract.comic.ComicInfo;
+import com.ignited.webtoon.extract.comic.Finder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.*;
 
+/**
+ * NaverComicFinder
+ *
+ * Find Naver Webtoons
+ *
+ * @author Ignited
+ * @see com.ignited.webtoon.extract.comic.Finder
+ */
 public class NaverComicFinder extends Finder {
 
     private final String url = "https://comic.naver.com/webtoon/creation.nhn";
@@ -24,6 +31,11 @@ public class NaverComicFinder extends Finder {
     private final String titleId = "titleId=";
     private final String src  = "src";
 
+    /**
+     * Instantiates a new Naver comic finder.
+     *
+     * @throws IOException the io exception
+     */
     public NaverComicFinder() throws IOException {
         super();
     }

@@ -3,8 +3,8 @@ package com.ignited.webtoon.comp.daum.comic;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.ignited.webtoon.extract.ComicSaver;
-import com.ignited.webtoon.extract.Downloader;
+import com.ignited.webtoon.extract.comic.ComicSaver;
+import com.ignited.webtoon.extract.comic.Downloader;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,6 +13,14 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * DaumComicDonwloader
+ *
+ * Dawnload Daum Webtoons
+ *
+ * @author Ignited
+ * @see com.ignited.webtoon.extract.comic.Downloader
+ */
 public class DaumComicDownloader extends Downloader {
 
 
@@ -22,6 +30,25 @@ public class DaumComicDownloader extends Downloader {
     private final List<String> items ;
     private final List<String> titles;
 
+
+    /**
+     * Instantiates a new Daum comic downloader.
+     *
+     * @param info the information about daum webtoon
+     * @throws IOException when it failed to get inital data.
+     */
+    public DaumComicDownloader(DaumComicInfo info) throws IOException {
+        this(info, null);
+    }
+
+
+    /**
+     * Instantiates a new Daum comic downloader.
+     *
+     * @param info the information about daum webtoon
+     * @param path the location where the webtoon will be saved.
+     * @throws IOException when it failed to get initial data.
+     */
     public DaumComicDownloader(DaumComicInfo info, String path) throws IOException {
         super(info, path);
         this.saver = new ComicSaver(path);
@@ -44,7 +71,6 @@ public class DaumComicDownloader extends Downloader {
             items.add(object.get("id").getAsString());
         }
     }
-
     @Override
     public void download(int index) throws IOException {
         JsonObject obj = new JsonParser().parse(new InputStreamReader(new URL(viewUrl + items.get(index)).openStream(), "UTF-8")).getAsJsonObject();
@@ -53,12 +79,22 @@ public class DaumComicDownloader extends Downloader {
     }
 
 
-
+    /**
+     * Get the title of one specific chapter.
+     *
+     * @param index the index of the chapter
+     * @return the title of the chapter
+     */
     @Override
     protected String getTitle(int index) {
         return titles.get(index);
     }
 
+    /**
+     * Get the number of the chapter of the webtoon.
+     *
+     * @return the number of the chapter.
+     */
     @Override
     public int size() {
         return items.size();

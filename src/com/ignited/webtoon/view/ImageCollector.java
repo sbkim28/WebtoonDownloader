@@ -7,27 +7,67 @@ import com.ignited.webtoon.indexer.order.Sortable;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * ImageCollector
+ *
+ * Collect Images in Chapter folders
+ *
+ * @author Ignited
+ */
 public class ImageCollector {
 
     private File[] dir;
     private Sortable<File> order;
 
+    /**
+     * Instantiates a new Image collector.
+     *
+     * image file order is default, CREATED_ASCENDING
+     *
+     * @param reader the reader
+     * @throws IOException the io exception
+     */
     public ImageCollector(FileIndexReader reader) throws IOException {
         this(reader, Order.CREATED_ASCENDING);
     }
+
+    /**
+     * Instantiates a new Image collector.
+     *
+     * @param reader the reader
+     * @param order  the sorting order of image files
+     * @throws IOException the io exception
+     */
     public ImageCollector(FileIndexReader reader, Sortable<File> order) throws IOException {
         dir = reader.read();
         this.order = order;
     }
 
+    /**
+     * Gets chapter name.
+     *
+     * @param index the number of chapter
+     * @return the name of chapter
+     */
     public String getName(int index) {
         return dir[index].getName();
     }
 
+    /**
+     * Collect image files of one specific chapter.
+     *
+     * @param index the number of chapter
+     * @return the image files
+     */
     public File[] collect(int index){
-        return order.sort(dir[index].listFiles());
+        return dir[index].listFiles();
     }
 
+    /**
+     * Size int.
+     *
+     * @return the int
+     */
     public int size(){
         return dir.length;
     }
