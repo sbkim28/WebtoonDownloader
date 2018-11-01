@@ -1,6 +1,7 @@
 package com.ignited.webtoon.comp.naver.comic;
 
 import com.ignited.webtoon.extract.ReadCookieDocument;
+import com.ignited.webtoon.extract.comic.ComicInfo;
 import com.ignited.webtoon.extract.comic.CookieSettable;
 
 import java.util.Map;
@@ -23,7 +24,7 @@ public class NaverComicCookieDownloader extends NaverComicDownloader implements 
      *
      * @param info the information about naver webtoon
      */
-    public NaverComicCookieDownloader(NaverComicInfo info){
+    public NaverComicCookieDownloader(ComicInfo info){
         this(info, null);
     }
 
@@ -33,7 +34,7 @@ public class NaverComicCookieDownloader extends NaverComicDownloader implements 
      * @param info the information about naver webtoon
      * @param path the location where the webtoon will be saved
      */
-    public NaverComicCookieDownloader(NaverComicInfo info, String path) {
+    public NaverComicCookieDownloader(ComicInfo info, String path) {
         super(info, path);
         doc = new ReadCookieDocument();
     }

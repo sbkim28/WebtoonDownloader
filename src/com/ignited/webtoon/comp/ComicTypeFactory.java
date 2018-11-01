@@ -2,12 +2,9 @@ package com.ignited.webtoon.comp;
 
 import com.ignited.webtoon.comp.daum.comic.DaumComicDownloader;
 import com.ignited.webtoon.comp.daum.comic.DaumComicFinder;
-//import com.ignited.webtoon.comp.daum.comic.DaumTextExtractor;
-import com.ignited.webtoon.comp.daum.comic.DaumComicInfo;
 import com.ignited.webtoon.comp.naver.comic.NaverComicCookieDownloader;
 import com.ignited.webtoon.comp.naver.comic.NaverComicDownloader;
 import com.ignited.webtoon.comp.naver.comic.NaverComicFinder;
-import com.ignited.webtoon.comp.naver.comic.NaverComicInfo;
 import com.ignited.webtoon.extract.comic.ComicFactory;
 import com.ignited.webtoon.extract.comic.ComicInfo;
 import com.ignited.webtoon.extract.comic.Downloader;
@@ -41,8 +38,9 @@ public enum ComicTypeFactory implements ComicFactory {
 
         @Override
         public Downloader downloader(ComicInfo info) {
-            return new NaverComicDownloader((NaverComicInfo) info);
+            return new NaverComicDownloader(info);
         }
+
     },
 
     /**
@@ -61,7 +59,7 @@ public enum ComicTypeFactory implements ComicFactory {
         @Override
         public Downloader downloader(ComicInfo info) {
             try {
-                return new DaumComicDownloader((DaumComicInfo) info);
+                return new DaumComicDownloader(info);
             } catch (IOException e) {
                 e.printStackTrace();
                 return null;
@@ -84,7 +82,7 @@ public enum ComicTypeFactory implements ComicFactory {
 
         @Override
         public Downloader downloader(ComicInfo info) {
-            return new NaverComicCookieDownloader((NaverComicInfo) info);
+            return new NaverComicCookieDownloader(info);
         }
     }
 

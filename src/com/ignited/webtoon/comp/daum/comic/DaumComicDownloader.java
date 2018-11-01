@@ -3,6 +3,7 @@ package com.ignited.webtoon.comp.daum.comic;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.ignited.webtoon.extract.comic.ComicInfo;
 import com.ignited.webtoon.extract.comic.ComicSaver;
 import com.ignited.webtoon.extract.comic.Downloader;
 
@@ -37,7 +38,7 @@ public class DaumComicDownloader extends Downloader {
      * @param info the information about daum webtoon
      * @throws IOException when it failed to get inital data.
      */
-    public DaumComicDownloader(DaumComicInfo info) throws IOException {
+    public DaumComicDownloader(ComicInfo info) throws IOException {
         this(info, null);
     }
 
@@ -49,7 +50,7 @@ public class DaumComicDownloader extends Downloader {
      * @param path the location where the webtoon will be saved.
      * @throws IOException when it failed to get initial data.
      */
-    public DaumComicDownloader(DaumComicInfo info, String path) throws IOException {
+    public DaumComicDownloader(ComicInfo info, String path) throws IOException {
         super(info, path);
         this.saver = new ComicSaver(path);
         this.loader = new DaumComicImageLoader(null);

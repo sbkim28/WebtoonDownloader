@@ -50,7 +50,7 @@ public class DaumComicFinder extends Finder{
 
             for(int i = 0;i<arr.size();++i){
                 JsonObject item = arr.get(i).getAsJsonObject();
-                ret.add(new DaumComicInfo(item.get("nickname").getAsString(), item.get("title").getAsString()));
+                ret.add(new ComicInfo(item.get("nickname").getAsString(), item.get("title").getAsString(), "DAUM"));
             }
 
         }

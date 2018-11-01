@@ -1,6 +1,7 @@
 package com.ignited.webtoon.comp.naver.comic;
 
 import com.ignited.webtoon.extract.*;
+import com.ignited.webtoon.extract.comic.ComicInfo;
 import com.ignited.webtoon.extract.comic.Downloader;
 import org.jsoup.Jsoup;
 
@@ -38,7 +39,7 @@ public class NaverComicDownloader extends Downloader {
      *
      * @param info the information about naver webtoon
      */
-    public NaverComicDownloader(NaverComicInfo info) {
+    public NaverComicDownloader(ComicInfo info) {
         this(info, null);
     }
 
@@ -48,7 +49,7 @@ public class NaverComicDownloader extends Downloader {
      * @param info the information about naver webtoon
      * @param path the location where the webtoon will be saved
      */
-    public NaverComicDownloader(NaverComicInfo info, String path){
+    public NaverComicDownloader(ComicInfo info, String path){
         super(info, path);
         this.saver = new NaverComicSaver(path);
         this.loader = new NaverComicImageLoader(null);

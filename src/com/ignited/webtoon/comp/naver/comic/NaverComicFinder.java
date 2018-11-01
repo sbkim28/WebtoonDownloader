@@ -50,9 +50,9 @@ public class NaverComicFinder extends Finder {
             Element a = webtoon.selectFirst(qa);
             String id = a.attr(hrefAttr);
             id = id.substring(id.indexOf(titleId) + titleId.length());
-            info.add(new NaverComicInfo(
+            info.add(new ComicInfo(
                     id, a.attr(titleAttr),
-                    webtoon.selectFirst(qimg).attr(src)
+                    "NAVER"
             ));
         }
 
