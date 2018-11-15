@@ -38,10 +38,10 @@ public class NaverComicSaver extends ComicSaver {
     }
 
     @Override
-    protected InputStream build(String url) throws IOException {
+    protected URLConnection build(String url) throws IOException {
 
         URLConnection conn = new URL(url).openConnection();
         conn.setRequestProperty("referer", "http://m.naver.com");
-        return conn.getInputStream();
+        return conn;
     }
 }

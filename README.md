@@ -5,10 +5,10 @@
 java -jar WebtoonManager.jar
 
 -d : 웹툰 다운로드
--d comicType[naver, daum] webtoonName path (index)
+-d comicType[naver, daum, lezhin] webtoonName path (index)
 
 -do : 웹툰의 한 화차만 다운로드
--do comicType[naver, daum] webtoonName path index
+-do comicType[naver, daum, lezhin] webtoonName path index
 
 -i : 인덱스 파일 생성
 -i path
@@ -16,6 +16,8 @@ java -jar WebtoonManager.jar
 -r : 다운로드된 웹툰 읽기
 -r path page
 
+-rf : 다운로드된 웹툰 읽기 - 파일 이름으로 검색
+-rf path filename
 ### Usage Example
 java -jar WebtoonManager.jar -d naver "무한도전 릴레이툰" "C://webtoons/2018/"
 
@@ -43,3 +45,6 @@ java -jar WebtoonManager.jar -r "C://webtoons/2018/" 2
 
 인덱스 파일을 참고하여 3번째 폴더 읽기
 
+java -jar WebtoonManager.jar -rf "C://webtoons/2018/" "1화"
+
+'C://webtoons/2018/' 아래의 폴더 중 이름이 '1화'인 폴더를 찾아 읽기

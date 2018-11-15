@@ -12,7 +12,6 @@ public interface Sortable<T> {
      * Sort an array of items
      * Sort  following the order,
      * @param items the items to sort
-     * @return the sorted an array of items
      */
-    T[] sort(T[] items);
+    void sort(T[] items);
 }

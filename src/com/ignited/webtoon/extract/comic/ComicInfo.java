@@ -3,8 +3,9 @@ package com.ignited.webtoon.extract.comic;
 
 /**
  * ComicInfo
- * <p>
+ *
  * The information about webtoon
+ * @author Ignited
  */
 public class ComicInfo {
     private String id;

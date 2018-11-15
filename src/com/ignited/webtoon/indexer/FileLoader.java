@@ -4,12 +4,12 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * FileIndexReader
+ * FileReader
  *
  * Read Index File
  * @author Ignited
  */
-public interface FileIndexReader{
+public interface FileLoader{
 
     /**
      * Read files from an index file

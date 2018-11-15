@@ -79,7 +79,7 @@ public abstract class FileIndexer implements Indexer{
     public void setIndex() throws IOException {
         File[] files = root.listFiles();
         if (files != null) {
-            files = order.sort(files);
+            order.sort(files);
             List<String> names = new ArrayList<>(files.length);
             for (File f : files) {
                 if (!f.isDirectory()) continue;

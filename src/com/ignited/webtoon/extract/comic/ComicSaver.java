@@ -2,11 +2,10 @@ package com.ignited.webtoon.extract.comic;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 
 /**
@@ -75,7 +74,7 @@ public class ComicSaver {
         int index = 0;
         for(String s : src) {
             try {
-                BufferedImage image = ImageIO.read(build(s));
+                //BufferedImage image = ImageIO.read(build(s));
                 StringBuilder builder = new StringBuilder().append(path).append("/").append(title).append("/");
 
                 while (builder.charAt(builder.length() - 2) == '.') {
@@ -85,8 +84,29 @@ public class ComicSaver {
                 File file = new File(builder.toString());
                 if (!file.exists()) file.mkdirs();
 
-                builder.append(name).append(++index).append(".jpg");
-                ImageIO.write(image, "jpg", new File(builder.toString()));
+                builder.append(name).append(++index);
+                URLConnection con = build(s);
+                String type = con.getContentType();
+                if(type.contains("jpeg")){
+                    builder.append(".jpg");
+                }else if(type.contains("gif")){
+                    builder.append(".gif");
+                }else if(type.contains("png")){
+                    builder.append(".png");
+                }else {
+                    throw new IOException("Unsupported Image Format : " + type);
+                }
+                //ImageIO.write(image, "jpg", new File(builder.toString()));
+                BufferedInputStream bis = new BufferedInputStream(con.getInputStream());
+                BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(builder.toString()));
+
+                int len;
+                byte[] buf = new byte[1024];
+                while ((len = bis.read(buf)) != -1){
+                    bos.write(buf, 0, len);
+                    bos.flush();
+                }
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -94,14 +114,14 @@ public class ComicSaver {
     }
 
     /**
-     * Build Image inputStream
+     * Build url connection
      *
      * @param url the url of the image
-     * @return the inputstream of the image
-     * @throws IOException when it failed to open stream.
+     * @return the url connection
+     * @throws IOException when it failed to open connection
      */
-    protected InputStream build(String url) throws IOException {
-        return new URL(url).openStream();
+    protected URLConnection build(String url) throws IOException {
+        return new URL(url).openConnection();
     }
 
 }

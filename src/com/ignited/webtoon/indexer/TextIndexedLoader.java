@@ -8,14 +8,14 @@ import java.util.List;
 
 
 /**
- * TextIndexReader
+ * TextIndexedReader
  *
- * Read Text Index File
+ * Read Text Indexed File
  *
  * @author Ignited
- * @see com.ignited.webtoon.indexer.FileIndexReader
+ * @see com.ignited.webtoon.indexer.FileLoader
  */
-public class TextIndexReader implements FileIndexReader {
+public class TextIndexedLoader implements FileLoader {
 
     /**
      * The directory containing Index file.
@@ -27,7 +27,7 @@ public class TextIndexReader implements FileIndexReader {
      *
      * @param path the directory containing Index File
      */
-    public TextIndexReader(String path){
+    public TextIndexedLoader(String path){
         this(new File(path));
     }
 
@@ -36,7 +36,7 @@ public class TextIndexReader implements FileIndexReader {
      *
      * @param root the directory containing Index File
      */
-    public TextIndexReader(File root) {
+    public TextIndexedLoader(File root) {
         if(!root.exists()||!root.isDirectory()) throw new IllegalArgumentException("Not a Directory");
         this.root = root;
     }

@@ -1,11 +1,12 @@
 package com.ignited.webtoon.view;
 
-import com.ignited.webtoon.indexer.FileIndexReader;
+import com.ignited.webtoon.indexer.FileLoader;
 import com.ignited.webtoon.indexer.order.Order;
 import com.ignited.webtoon.indexer.order.Sortable;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * ImageCollector
@@ -22,13 +23,13 @@ public class ImageCollector {
     /**
      * Instantiates a new Image collector.
      *
-     * image file order is default, CREATED_ASCENDING
+     * image file order is default, IMAGE_ORDER
      *
      * @param reader the reader
      * @throws IOException the io exception
      */
-    public ImageCollector(FileIndexReader reader) throws IOException {
-        this(reader, Order.CREATED_ASCENDING);
+    public ImageCollector(FileLoader reader) throws IOException {
+        this(reader, Order.IMAGE_ORDER);
     }
 
     /**
@@ -38,7 +39,7 @@ public class ImageCollector {
      * @param order  the sorting order of image files
      * @throws IOException the io exception
      */
-    public ImageCollector(FileIndexReader reader, Sortable<File> order) throws IOException {
+    public ImageCollector(FileLoader reader, Sortable<File> order) throws IOException {
         dir = reader.read();
         this.order = order;
     }
@@ -60,7 +61,23 @@ public class ImageCollector {
      * @return the image files
      */
     public File[] collect(int index){
-        return dir[index].listFiles();
+        File[] files = dir[index].listFiles();
+        order.sort(files);
+        return files;
+    }
+
+    public File[] collect(String filename){
+        File f = null;
+        for (File file: dir) {
+            if(file.getName().equals(filename)){
+                f = file;
+                break;
+            }
+        }
+        if(f == null) return null;
+        File[] files = f.listFiles();
+        order.sort(files);
+        return files;
     }
 
     /**

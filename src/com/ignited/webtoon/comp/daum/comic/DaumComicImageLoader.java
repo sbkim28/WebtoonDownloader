@@ -18,8 +18,6 @@ import java.util.List;
  */
 public class DaumComicImageLoader implements ImageLoader {
 
-    private final String viewUrl = "http://webtoon.daum.net/data/pc/webtoon/viewer_images/";
-
     private JsonObject json;
 
     /**

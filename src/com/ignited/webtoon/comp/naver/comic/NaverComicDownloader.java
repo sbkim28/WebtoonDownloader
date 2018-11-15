@@ -54,7 +54,7 @@ public class NaverComicDownloader extends Downloader {
         this.saver = new NaverComicSaver(path);
         this.loader = new NaverComicImageLoader(null);
         this.doc = new ReadDocument();
-        getSize();
+        setSize();
     }
 
     @Override
@@ -64,7 +64,7 @@ public class NaverComicDownloader extends Downloader {
         super.download(index);
     }
 
-    private void getSize() {
+    private void setSize() {
         String href;
         try {
             href = Jsoup.connect(listUrl +  titleId + info.getId()).get().getElementsByClass(qViewList).first().selectFirst(qtr)

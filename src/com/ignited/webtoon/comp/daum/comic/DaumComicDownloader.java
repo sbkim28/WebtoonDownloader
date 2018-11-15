@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ignited.webtoon.extract.comic.ComicInfo;
 import com.ignited.webtoon.extract.comic.ComicSaver;
-import com.ignited.webtoon.extract.comic.Downloader;
+import com.ignited.webtoon.extract.comic.ListDownloader;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -20,16 +20,13 @@ import java.util.List;
  * Dawnload Daum Webtoons
  *
  * @author Ignited
- * @see com.ignited.webtoon.extract.comic.Downloader
+ * @see com.ignited.webtoon.extract.comic.ListDownloader
  */
-public class DaumComicDownloader extends Downloader {
+public class DaumComicDownloader extends ListDownloader {
 
 
     private final String listUrl = "http://webtoon.daum.net/data/pc/webtoon/view/";
     private final String viewUrl = "http://webtoon.daum.net/data/pc/webtoon/viewer_images/";
-
-    private final List<String> items ;
-    private final List<String> titles;
 
 
     /**
@@ -40,6 +37,7 @@ public class DaumComicDownloader extends Downloader {
      */
     public DaumComicDownloader(ComicInfo info) throws IOException {
         this(info, null);
+
     }
 
 
@@ -54,12 +52,11 @@ public class DaumComicDownloader extends Downloader {
         super(info, path);
         this.saver = new ComicSaver(path);
         this.loader = new DaumComicImageLoader(null);
-        items = new ArrayList<>();
-        titles = new ArrayList<>();
-        init();
     }
 
-    private void init() throws IOException {
+    @Override
+    protected void initItems() throws IOException {
+        items = new ArrayList<>();
         JsonArray array = new JsonParser().parse(new InputStreamReader(new URL(listUrl + info.getId()).openStream(), "UTF-8")).getAsJsonObject().get("data")
                 .getAsJsonObject().get("webtoon").getAsJsonObject().get("webtoonEpisodes").getAsJsonArray();
         List<JsonObject> list = new ArrayList<>();
@@ -68,36 +65,17 @@ public class DaumComicDownloader extends Downloader {
         }
         list.sort(Comparator.comparingInt(o -> o.get("episode").getAsInt()));
         for(JsonObject object : list) {
-            titles.add(object.get("title").getAsString());
-            items.add(object.get("id").getAsString());
+            items.add(new Item(object.get("id").getAsString(), object.get("title").getAsString()));
         }
+
     }
+
     @Override
     public void download(int index) throws IOException {
-        JsonObject obj = new JsonParser().parse(new InputStreamReader(new URL(viewUrl + items.get(index)).openStream(), "UTF-8")).getAsJsonObject();
+        JsonObject obj = new JsonParser().parse(new InputStreamReader(new URL(viewUrl + items.get(index).getId()).openStream(), "UTF-8")).getAsJsonObject();
         ((DaumComicImageLoader) loader).setSource(obj);
         super.download(index);
     }
 
 
-    /**
-     * Get the title of one specific chapter.
-     *
-     * @param index the index of the chapter
-     * @return the title of the chapter
-     */
-    @Override
-    protected String getTitle(int index) {
-        return titles.get(index);
-    }
-
-    /**
-     * Get the number of the chapter of the webtoon.
-     *
-     * @return the number of the chapter.
-     */
-    @Override
-    public int size() {
-        return items.size();
-    }
 }
