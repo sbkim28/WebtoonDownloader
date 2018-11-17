@@ -12,7 +12,7 @@ import java.io.*;
  * @author Ignited
  * @see com.ignited.webtoon.translator.FileTranslator
  */
-public class HTMLTranslator extends FileTranslator {
+public class HTMLTranslator extends FileTranslator implements Runnable {
 
     private String title;
     private String background;

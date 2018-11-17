@@ -3,6 +3,8 @@ package com.ignited.webtoon.comp.naver.comic;
 import com.ignited.webtoon.extract.*;
 import com.ignited.webtoon.extract.comic.ComicInfo;
 import com.ignited.webtoon.extract.comic.Downloader;
+import com.ignited.webtoon.extract.comic.e.ComicAccessException;
+import com.ignited.webtoon.extract.comic.e.ComicDownloadException;
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
@@ -16,13 +18,7 @@ public class NaverComicDownloader extends Downloader {
 
     private final String detailUrl = "https://comic.naver.com/webtoon/detail.nhn";
     private final String listUrl = "https://comic.naver.com/webtoon/list.nhn";
-    private final String qh3 = "h3";
     private final String titleId = "?titleId=";
-
-    private final String qViewList = "viewList";
-    private final String qtr = "tbody td.title";
-    private final String qa = "a";
-    private final String hrefAttr= "href";
 
     private final String noStart = "&no=";
     private final String noEnd = "&weekday=";
@@ -51,6 +47,7 @@ public class NaverComicDownloader extends Downloader {
      */
     public NaverComicDownloader(ComicInfo info, String path){
         super(info, path);
+        if(!"NAVER".equalsIgnoreCase(info.getType())) throw new IllegalArgumentException("Unmatching comic type");
         this.saver = new NaverComicSaver(path);
         this.loader = new NaverComicImageLoader(null);
         this.doc = new ReadDocument();
@@ -58,8 +55,16 @@ public class NaverComicDownloader extends Downloader {
     }
 
     @Override
-    public void download(int index) throws IOException {
-        doc.read(detailUrl + titleId + info.getId() + "&no=" + (index + 1));
+    public void download(int index) throws ComicDownloadException {
+        String url = detailUrl + titleId + info.getId() + "&no=" + (index + 1);
+        try {
+            doc.read(url);
+        } catch (IOException e) {
+            throw new ComicDownloadException(e);
+        }
+        if(!doc.getDoc().baseUri().contains(detailUrl)){
+            throw new ComicAccessException("Unable to access " + url);
+        }
         ((NaverComicImageLoader) loader).setSource(doc);
         super.download(index);
     }
@@ -67,8 +72,8 @@ public class NaverComicDownloader extends Downloader {
     private void setSize() {
         String href;
         try {
-            href = Jsoup.connect(listUrl +  titleId + info.getId()).get().getElementsByClass(qViewList).first().selectFirst(qtr)
-                .selectFirst(qa).attr(hrefAttr);
+            href = Jsoup.connect(listUrl +  titleId + info.getId()).get().getElementsByClass("viewList").first().selectFirst("tbody td.title")
+                .selectFirst("a").attr("href");
         }catch (IOException e){
             e.printStackTrace();
             size = 0;
@@ -79,7 +84,7 @@ public class NaverComicDownloader extends Downloader {
 
     @Override
     protected String getTitle(int index) {
-        return doc.getDoc().selectFirst(qh3).text();
+        return doc.getDoc().selectFirst("h3").text();
     }
 
     @Override

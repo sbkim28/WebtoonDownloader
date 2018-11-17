@@ -1,5 +1,7 @@
 package com.ignited.webtoon.extract.comic;
 
+import com.ignited.webtoon.extract.comic.e.ComicDownloadException;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -69,9 +71,11 @@ public class ComicSaver {
      *
      * @param src   the src of the image of one chapter
      * @param title the title of the chapter
+     * @throws ComicDownloadException when chapter was donwloaded partially.
      */
-    public void save(List<String> src, String title){
+    public void save(List<String> src, String title) throws ComicDownloadException {
         int index = 0;
+        boolean ex = false;
         for(String s : src) {
             try {
                 //BufferedImage image = ImageIO.read(build(s));
@@ -96,7 +100,7 @@ public class ComicSaver {
                 }else {
                     throw new IOException("Unsupported Image Format : " + type);
                 }
-                //ImageIO.write(image, "jpg", new File(builder.toString()));
+
                 BufferedInputStream bis = new BufferedInputStream(con.getInputStream());
                 BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(builder.toString()));
 
@@ -109,8 +113,11 @@ public class ComicSaver {
 
             } catch (IOException e) {
                 e.printStackTrace();
+                ex = true;
             }
         }
+
+        if(ex) throw new ComicDownloadException("Partially downloaded");
     }
 
     /**

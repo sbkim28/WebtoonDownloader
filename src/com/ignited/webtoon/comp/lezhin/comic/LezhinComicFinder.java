@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ignited.webtoon.extract.comic.ComicInfo;
 import com.ignited.webtoon.extract.comic.Finder;
+import com.ignited.webtoon.extract.comic.e.ComicFinderInitException;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -26,16 +27,28 @@ public class LezhinComicFinder extends Finder{
 
     private final String url = "https://www.lezhin.com/api/v2/comics?adult_kind=all&store=web&offset=";
     private final String limit = "&limit=";
+    private final String thumb = "https://cdn.lezhin.com/v2/comics/%s/images/thumbnail";
 
     private final int lim = 2000;
 
     /**
      * Instantiates a new LezhinComicFinder.
      *
-     * @throws IOException when it failed to initiate
+     * @throws ComicFinderInitException when it failed to initiate
      */
-    public LezhinComicFinder() throws IOException {
+    public LezhinComicFinder() throws ComicFinderInitException {
         super();
+    }
+
+    /**
+     * Instantiates a new Finder.
+     *
+     * @param maxTry the max try to connect and get elements
+     * @param wait   the wait time in millis after failure
+     * @throws ComicFinderInitException when it failed to initialize
+     */
+    public LezhinComicFinder(int maxTry, int wait) throws ComicFinderInitException {
+        super(maxTry, wait);
     }
 
     @Override
@@ -46,8 +59,7 @@ public class LezhinComicFinder extends Finder{
         do{
             HttpURLConnection connection = (HttpURLConnection) new URL(url + offset + limit + lim).openConnection();
             connection.setRequestProperty("x-lz-locale", "ko_KR");
-            JsonObject object =  new JsonParser().parse(new InputStreamReader(connection.getInputStream()
-                    , "UTF-8")).getAsJsonObject();
+            JsonObject object =  new JsonParser().parse(new InputStreamReader(connection.getInputStream(), "UTF-8")).getAsJsonObject();
             hasNext = object.get("hasNext").getAsBoolean();
             JsonArray arr = object.get("data").getAsJsonArray();
             for(int i = 0;i<arr.size();++i){
@@ -55,7 +67,7 @@ public class LezhinComicFinder extends Finder{
                 String id = item.get("id").getAsString();
                 String alias = item.get("alias").getAsString();
                 String title = item.get("title").getAsString();
-                infos.add(new LezhinComicInfo(id, title, alias));
+                infos.add(new LezhinComicInfo(id, title, alias, String.format(thumb, id)));
             }
             offset += lim;
         }while (hasNext);

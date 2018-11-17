@@ -1,5 +1,7 @@
 package com.ignited.webtoon.extract.comic;
 
+import com.ignited.webtoon.extract.comic.e.ComicDownloadException;
+
 import java.util.List;
 
 
@@ -18,7 +20,7 @@ public interface ImageLoader {
      *
      * @return the list of url of the images.
      */
-    List<String> load();
+    List<String> load() throws ComicDownloadException;
 
 
 }

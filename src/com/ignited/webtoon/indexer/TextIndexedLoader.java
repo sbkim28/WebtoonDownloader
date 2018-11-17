@@ -26,6 +26,7 @@ public class TextIndexedLoader implements FileLoader {
      * Instantiates a new Text index reader.
      *
      * @param path the directory containing Index File
+     * @throws IllegalArgumentException if the file is not a folder
      */
     public TextIndexedLoader(String path){
         this(new File(path));
@@ -35,6 +36,7 @@ public class TextIndexedLoader implements FileLoader {
      * Instantiates a new Text index reader.
      *
      * @param root the directory containing Index File
+     * @throws IllegalArgumentException if the file is not a folder
      */
     public TextIndexedLoader(File root) {
         if(!root.exists()||!root.isDirectory()) throw new IllegalArgumentException("Not a Directory");

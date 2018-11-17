@@ -16,8 +16,8 @@ public class LezhinComicInfo extends ComicInfo {
      * @param title the title
      * @param alias the exposed id
      */
-    public LezhinComicInfo(String id, String title, String alias) {
-        super(id, title, "LEZHIN");
+    public LezhinComicInfo(String id, String title, String alias, String thumbnail) {
+        super(id, title, "LEZHIN", thumbnail);
         this.alias = alias;
     }
 
@@ -36,6 +36,7 @@ public class LezhinComicInfo extends ComicInfo {
         return "LezhinComicInfo{" +
                 "id='" + getId() + '\'' +
                 ", title='" + getTitle() + '\'' +
+                ", thumbnail='" + getThumbnail() + '\'' +
                 "alias='" + alias + '\'' +
                 '}';
     }

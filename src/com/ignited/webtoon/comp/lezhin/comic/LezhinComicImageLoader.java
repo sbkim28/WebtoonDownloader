@@ -1,6 +1,8 @@
 package com.ignited.webtoon.comp.lezhin.comic;
 
 import com.ignited.webtoon.extract.comic.ImageLoader;
+import com.ignited.webtoon.extract.comic.e.ComicAccessException;
+import com.ignited.webtoon.extract.comic.e.ComicDownloadException;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -26,22 +28,25 @@ public class LezhinComicImageLoader implements ImageLoader {
     }
 
     @Override
-    public List<String> load() {
+    public List<String> load() throws ComicDownloadException{
         List<String> ret = new ArrayList<>();
-        int i = 0;
+        int i = 1;
         while (true){
             try {
-                String u = String.format(url, comicId, episodeId, ++i);
+                String u = String.format(url, comicId, episodeId, i);
                 HttpURLConnection con = (HttpURLConnection) new URL(u).openConnection();
-                if(con.getResponseCode() == 200) {
+                int res = con.getResponseCode();
+                System.out.println(res);
+                if(res == 200) {
                     ret.add(u);
-                }else if(con.getResponseCode() == 404){
+                }else if(res == 404){
                     break;
                 }else {
-                    throw new IOException();
+                    throw new ComicAccessException(u, res);
                 }
+                ++i;
             } catch (IOException e) {
-                throw new UncheckedIOException(e);
+                throw new ComicDownloadException(e);
             }
         }
 

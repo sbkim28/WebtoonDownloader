@@ -1,6 +1,9 @@
 package com.ignited.webtoon.extract;
 
 import com.ignited.webtoon.extract.comic.*;
+import com.ignited.webtoon.extract.comic.e.ComicException;
+import com.ignited.webtoon.extract.comic.e.ComicFinderInitException;
+import com.ignited.webtoon.extract.comic.e.ComicNotFoundException;
 import com.ignited.webtoon.indexer.FileIndexer;
 import com.ignited.webtoon.indexer.order.Order;
 import com.ignited.webtoon.indexer.TextIndexer;
@@ -36,12 +39,13 @@ public class ComicWriteManager {
      * @param name    the name of the webtoon
      * @param path    the location where the webtoon will be saved
      * @param index   the number of the chapter of the webtoon
-     * @throws IOException when it failed to download
+     * @throws ComicException when it failed to download
      */
-    public static void executeOne(ComicFactory factory, String name, String path, int index) throws IOException {
+    public static void executeOne(ComicFactory factory, String name, String path, int index) throws ComicException {
         Finder finder = factory.finder();
         Downloader downloader = factory.downloader(findInfo(finder, name));
         downloader.setPath(path);
+
         downloader.download(index);
     }
 
@@ -53,7 +57,7 @@ public class ComicWriteManager {
      * @param path    the location where the webtoon will be saved
      * @throws IOException when it failed to download
      */
-    public static void execute(ComicFactory factory, String name, String path) throws IOException {
+    public static void execute(ComicFactory factory, String name, String path) throws IOException, ComicException {
         execute(factory, name, path, 0);
     }
 
@@ -66,7 +70,7 @@ public class ComicWriteManager {
      * @param index   the start number of the chapter of the webtoon
      * @throws IOException when it failed to download
      */
-    public static void execute(ComicFactory factory, String name, String path, int index) throws IOException {
+    public static void execute(ComicFactory factory, String name, String path, int index) throws IOException, ComicException {
         Finder finder = factory.finder();
         Downloader downloader = factory.downloader(findInfo(finder,name));
         downloader.setPath(path);
@@ -86,7 +90,7 @@ public class ComicWriteManager {
      * @param cookieSet the cookieset
      * @throws IOException when it failed to download
      */
-    public static void execute(ComicFactory factory , String name, String path, int index, Map<String, String> cookieSet) throws IOException {
+    public static void execute(ComicFactory factory , String name, String path, int index, Map<String, String> cookieSet) throws IOException, ComicException {
         Finder finder = factory.finder();
         Downloader downloader = factory.downloader(findInfo(finder, name));
         downloader.setPath(path);
@@ -99,12 +103,12 @@ public class ComicWriteManager {
         setIndex(path);
     }
 
-    private static ComicInfo findInfo(Finder finder, String name){
+    private static ComicInfo findInfo(Finder finder, String name) throws ComicNotFoundException {
         ComicInfo info = finder.findMatch(name);
         if(info == null) {
             List<ComicInfo> infos = finder.findAllContains(name);
             if (infos.size() == 0) {
-                throw new IllegalArgumentException("Element not found");
+                throw new ComicNotFoundException(finder, name);
             } else if (infos.size() == 1) {
                 info = infos.get(0);
             } else {

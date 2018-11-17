@@ -18,11 +18,6 @@ import java.util.List;
  */
 public class NaverComicImageLoader implements ImageLoader {
 
-    private final String detailUrl = "https://comic.naver.com/webtoon/detail.nhn";
-    private final String qViewer = "wt_viewer";
-    private final String qImg = "img";
-    private final String srcAttr = "src";
-
     private ReadDocument rd;
 
     /**
@@ -46,11 +41,11 @@ public class NaverComicImageLoader implements ImageLoader {
     @Override
     public List<String> load() {
         List<String> ret = new ArrayList<>();
-        Elements imgs = rd.getDoc().getElementsByClass(qViewer).first().select(qImg);
-
+        Elements imgs = rd.getDoc().getElementsByClass("wt_viewer").first().select("img");
         for(Element e : imgs){
-            ret.add(e.attr(srcAttr));
+            ret.add(e.attr("src"));
         }
+
         return ret;
     }
 }

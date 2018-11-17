@@ -6,6 +6,9 @@ import com.google.gson.JsonParser;
 import com.ignited.webtoon.extract.comic.ComicInfo;
 import com.ignited.webtoon.extract.comic.ComicSaver;
 import com.ignited.webtoon.extract.comic.ListDownloader;
+import com.ignited.webtoon.extract.comic.e.ComicAccessException;
+import com.ignited.webtoon.extract.comic.e.ComicDownloadException;
+import com.ignited.webtoon.extract.comic.e.ComicListInitException;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -33,30 +36,44 @@ public class DaumComicDownloader extends ListDownloader {
      * Instantiates a new Daum comic downloader.
      *
      * @param info the information about daum webtoon
-     * @throws IOException when it failed to get inital data.
+     * @throws ComicListInitException when it failed to get inital data.
      */
-    public DaumComicDownloader(ComicInfo info) throws IOException {
+    public DaumComicDownloader(ComicInfo info) throws ComicListInitException {
         this(info, null);
 
     }
-
 
     /**
      * Instantiates a new Daum comic downloader.
      *
      * @param info the information about daum webtoon
-     * @param path the location where the webtoon will be saved.
-     * @throws IOException when it failed to get initial data.
+     * @param path the location where the webtoon will be saved
+     * @throws ComicListInitException when it failed to get initial data.
      */
-    public DaumComicDownloader(ComicInfo info, String path) throws IOException {
-        super(info, path);
+    public DaumComicDownloader(ComicInfo info, String path) throws ComicListInitException {
+        this(info, path, DEFAULT_MAXTRY, DEFAULT_WAIT);
+    }
+
+    /**
+     * Instantiates a new Daum comic downloader.
+     *
+     * @param info the information about daum webtoon
+     * @param path the location where the webtoon will be saved
+     * @param maxTry the max try to connect and get elements
+     * @param wait   the wait time in millis after failure
+     * @throws ComicListInitException when it failed to get initial data.
+     */
+    public DaumComicDownloader(ComicInfo info, String path, int maxTry, int wait) throws ComicListInitException {
+        super(info, path, maxTry, wait);
         this.saver = new ComicSaver(path);
         this.loader = new DaumComicImageLoader(null);
     }
 
     @Override
     protected void initItems() throws IOException {
+        if(!"DAUM".equalsIgnoreCase(info.getType())) throw new IllegalArgumentException("Unmatching comic type");
         items = new ArrayList<>();
+
         JsonArray array = new JsonParser().parse(new InputStreamReader(new URL(listUrl + info.getId()).openStream(), "UTF-8")).getAsJsonObject().get("data")
                 .getAsJsonObject().get("webtoon").getAsJsonObject().get("webtoonEpisodes").getAsJsonArray();
         List<JsonObject> list = new ArrayList<>();
@@ -71,8 +88,18 @@ public class DaumComicDownloader extends ListDownloader {
     }
 
     @Override
-    public void download(int index) throws IOException {
-        JsonObject obj = new JsonParser().parse(new InputStreamReader(new URL(viewUrl + items.get(index).getId()).openStream(), "UTF-8")).getAsJsonObject();
+    public void download(int index) throws ComicDownloadException {
+        String url = viewUrl + items.get(index).getId();
+        JsonObject obj = null;
+        try {
+            obj = new JsonParser().parse(new InputStreamReader(new URL(url).openStream(), "UTF-8")).getAsJsonObject();
+        } catch (IOException e) {
+            throw new ComicDownloadException(e);
+        }
+        String status = obj.get("result").getAsJsonObject().get("status").getAsString();
+        if(!status.equals("200")){
+            throw new ComicAccessException(url, status);
+        }
         ((DaumComicImageLoader) loader).setSource(obj);
         super.download(index);
     }

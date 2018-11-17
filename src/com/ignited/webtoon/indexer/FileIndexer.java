@@ -34,9 +34,9 @@ public abstract class FileIndexer implements Indexer{
      * Instantiates a new File indexer.
      *
      * @param path the directory
-     * @throws IOException if the file is not a folder
+     * @throws IllegalArgumentException if the file is not a folder
      */
-    public FileIndexer(String path) throws IOException {
+    public FileIndexer(String path) {
         this(new File(path), Order.NAME_ASCENDING);
     }
 
@@ -45,9 +45,9 @@ public abstract class FileIndexer implements Indexer{
      *
      * @param path  the directory
      * @param order the sorting order
-     * @throws IOException if the file is not a folder
+     * @throws IllegalArgumentException if the file is not a folder or order is null
      */
-    public FileIndexer(String path, Sortable<File> order) throws IOException {
+    public FileIndexer(String path, Sortable<File> order) {
         this(new File(path), order);
     }
 
@@ -55,9 +55,9 @@ public abstract class FileIndexer implements Indexer{
      * Instantiates a new File indexer.
      *
      * @param root the directory
-     * @throws IOException if the file is not a folder
+     * @throws IllegalArgumentException if the file is not a folder
      */
-    public FileIndexer(File root) throws IOException {
+    public FileIndexer(File root) {
         this(root, Order.NAME_ASCENDING);
     }
 
@@ -66,11 +66,11 @@ public abstract class FileIndexer implements Indexer{
      *
      * @param root  the directory
      * @param order the sorting order
-     * @throws IOException if the file is not a folder
+     * @throws IllegalArgumentException if the file is not a folder or order is null
      */
-    public FileIndexer(File root, Sortable<File> order) throws IOException{
+    public FileIndexer(File root, Sortable<File> order) {
         if(order == null) throw new IllegalArgumentException("Order cannot be null");
-        if(!root.exists()||!root.isDirectory()) throw new NotDirectoryException(root.getPath());
+        if(!root.exists()||!root.isDirectory()) throw new IllegalArgumentException(root.getPath());
         this.order = order;
         this.root = root;
     }

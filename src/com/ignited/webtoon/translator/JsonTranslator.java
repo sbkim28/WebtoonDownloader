@@ -12,7 +12,7 @@ import java.io.File;
  * @author Ignited
  * @see com.ignited.webtoon.translator.FileTranslator
  */
-public class JsonTranslator extends FileTranslator{
+public class JsonTranslator extends FileTranslator implements Runnable{
 
     private String arrTag;
 

@@ -2,6 +2,7 @@ package com.ignited.webtoon;
 
 import com.ignited.webtoon.comp.ComicTypeFactory;
 import com.ignited.webtoon.extract.ComicWriteManager;
+import com.ignited.webtoon.extract.comic.e.ComicException;
 import com.ignited.webtoon.view.HTMLViewer;
 
 import java.io.IOException;
@@ -32,7 +33,7 @@ public class RUN {
             } else {
                 printInfo();
             }
-        }catch (IOException e){
+        }catch (IOException | ComicException e){
             e.printStackTrace();
             System.exit(1);
         }catch (ArrayIndexOutOfBoundsException e){
@@ -51,7 +52,7 @@ public class RUN {
     }
 
 
-    public static void downlaod(String type, String name, String path) throws IOException {
+    public static void downlaod(String type, String name, String path) throws IOException, ComicException {
         if(type.equalsIgnoreCase("naver")) {
             ComicWriteManager.execute(ComicTypeFactory.NAVER, name, path);
         }else if (type.equalsIgnoreCase("daum")) {
@@ -64,7 +65,7 @@ public class RUN {
         }
     }
 
-    public static void downlaod(String type, String name, String path, String index) throws IOException {
+    public static void downlaod(String type, String name, String path, String index) throws IOException, ComicException {
         if(type.equalsIgnoreCase("naver")) {
             ComicWriteManager.execute(ComicTypeFactory.NAVER, name, path, Integer.parseInt(index));
         }else if (type.equalsIgnoreCase("daum")) {
@@ -76,7 +77,7 @@ public class RUN {
         }
     }
 
-    public static void downlaodOnly(String type, String name, String path, String index) throws IOException {
+    public static void downlaodOnly(String type, String name, String path, String index) throws ComicException {
         if(type.equalsIgnoreCase("naver")) {
             ComicWriteManager.executeOne(ComicTypeFactory.NAVER, name, path, Integer.parseInt(index));
         }else if (type.equalsIgnoreCase("daum")) {

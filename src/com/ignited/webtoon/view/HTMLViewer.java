@@ -24,8 +24,9 @@ public class HTMLViewer {
      * Instantiates a new Html viewer.
      *
      * @param path the webtoon directory containing chapter folders
+     * @throws IllegalArgumentException when workDir is not a directory
      */
-    public HTMLViewer(String path) throws IOException {
+    public HTMLViewer(String path) {
         this(path, ".");
     }
 
@@ -34,8 +35,9 @@ public class HTMLViewer {
      *
      * @param path    the webtoon directory containing chapter folders
      * @param workDir the directory where the temporary files will be located
+     * @throws IllegalArgumentException when workDir is not a directory
      */
-    public HTMLViewer(String path, String workDir) throws IOException {
+    public HTMLViewer(String path, String workDir) {
         File w = new File(workDir);
         if(!w.exists()){
             w.mkdirs();
@@ -51,8 +53,9 @@ public class HTMLViewer {
      *
      * @param loader  the File loader
      * @param workDir the directory where the temporary files will be located
+     * @throws IllegalArgumentException when workDir is not a directory
      */
-    public HTMLViewer(FileLoader loader, String workDir) throws IOException {
+    public HTMLViewer(FileLoader loader, String workDir) {
         File w = new File(workDir);
         if(!w.exists()){
             w.mkdirs();
@@ -76,7 +79,7 @@ public class HTMLViewer {
      * View.
      *
      * @param index the index
-     * @throws IOException
+     * @throws IOException when failed to run
      */
     public void view(int index) throws IOException {
         File _tmp = File.createTempFile("temp_", ".html", workingDir.getCanonicalFile());
@@ -89,6 +92,12 @@ public class HTMLViewer {
         Desktop.getDesktop().browse(_tmp.toURI());
     }
 
+    /**
+     * View.
+     *
+     * @param filename the filename
+     * @throws IOException when failed to run
+     */
     public void view(String filename) throws IOException {
         File _tmp = File.createTempFile("temp_", ".html", workingDir.getCanonicalFile());
         _tmp.deleteOnExit();

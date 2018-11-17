@@ -11,6 +11,8 @@ import com.ignited.webtoon.extract.comic.ComicFactory;
 import com.ignited.webtoon.extract.comic.ComicInfo;
 import com.ignited.webtoon.extract.comic.Downloader;
 import com.ignited.webtoon.extract.comic.Finder;
+import com.ignited.webtoon.extract.comic.e.ComicFinderInitException;
+import com.ignited.webtoon.extract.comic.e.ComicListInitException;
 
 import java.io.IOException;
 
@@ -31,7 +33,7 @@ public enum ComicTypeFactory implements ComicFactory {
     NAVER{
         private NaverComicFinder finder;
         @Override
-        public Finder finder() throws IOException {
+        public Finder finder() throws ComicFinderInitException {
             if (finder == null) {
                 finder = new NaverComicFinder();
             }
@@ -51,7 +53,7 @@ public enum ComicTypeFactory implements ComicFactory {
     DAUM{
         private DaumComicFinder finder;
         @Override
-        public Finder finder() throws IOException {
+        public Finder finder() throws ComicFinderInitException {
             if (finder == null) {
                 finder = new DaumComicFinder();
             }
@@ -62,7 +64,7 @@ public enum ComicTypeFactory implements ComicFactory {
         public Downloader downloader(ComicInfo info) {
             try {
                 return new DaumComicDownloader(info);
-            } catch (IOException e) {
+            } catch (ComicListInitException e) {
                 e.printStackTrace();
                 return null;
             }
@@ -75,7 +77,7 @@ public enum ComicTypeFactory implements ComicFactory {
     NAVER_COOKIE{
         private NaverComicFinder finder;
         @Override
-        public Finder finder() throws IOException {
+        public Finder finder() throws ComicFinderInitException {
             if (finder == null) {
                 finder = new NaverComicFinder();
             }
@@ -95,7 +97,7 @@ public enum ComicTypeFactory implements ComicFactory {
 
         private LezhinComicFinder finder;
         @Override
-        public Finder finder() throws IOException {
+        public Finder finder() throws ComicFinderInitException {
             if (finder == null) {
                 finder = new LezhinComicFinder();
             }
@@ -106,7 +108,7 @@ public enum ComicTypeFactory implements ComicFactory {
         public Downloader downloader(ComicInfo info) {
             try {
                 return new LezhinComicDownloader(info);
-            } catch (IOException e) {
+            } catch (ComicListInitException e) {
                 e.printStackTrace();
                 return null;
             }

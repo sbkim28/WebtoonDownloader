@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ignited.webtoon.extract.comic.ComicInfo;
 import com.ignited.webtoon.extract.comic.Finder;
+import com.ignited.webtoon.extract.comic.e.ComicFinderInitException;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -31,10 +32,21 @@ public class DaumComicFinder extends Finder{
     /**
      * Instantiates a new Daum comic finder.
      *
-     * @throws IOException when it failed to initialize.
+     * @throws ComicFinderInitException when it failed to initialize.
      */
-    public DaumComicFinder() throws IOException {
+    public DaumComicFinder() throws ComicFinderInitException {
         super();
+    }
+
+    /**
+     * Instantiates a new Finder.
+     *
+     * @param maxTry the max try to connect and get elements
+     * @param wait   the wait time in millis after failure
+     * @throws ComicFinderInitException when it failed to initialize
+     */
+    public DaumComicFinder(int maxTry, int wait) throws ComicFinderInitException {
+        super(maxTry, wait);
     }
 
     @Override
@@ -48,9 +60,11 @@ public class DaumComicFinder extends Finder{
 
             JsonArray arr = new JsonParser().parse(new InputStreamReader(new URL(urlFactory(index)).openStream(), "UTF-8")).getAsJsonObject().get("data").getAsJsonArray();
 
+
             for(int i = 0;i<arr.size();++i){
                 JsonObject item = arr.get(i).getAsJsonObject();
-                ret.add(new ComicInfo(item.get("nickname").getAsString(), item.get("title").getAsString(), "DAUM"));
+                ret.add(new ComicInfo(item.get("nickname").getAsString(), item.get("title").getAsString(), "DAUM",
+                        item.get("pcThumbnailImage").getAsJsonObject().get("url").getAsString()));
             }
 
         }

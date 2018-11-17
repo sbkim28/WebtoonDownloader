@@ -22,9 +22,9 @@ public class TextIndexer extends FileIndexer{
      * Instantiates a new Text indexer.
      *
      * @param path the directory
-     * @throws IOException if file is not directory
+     * @throws IllegalArgumentException if file is not directory
      */
-    public TextIndexer(String path) throws IOException {
+    public TextIndexer(String path){
         super(path);
     }
 
@@ -33,9 +33,9 @@ public class TextIndexer extends FileIndexer{
      *
      * @param path  the directory
      * @param order the sorting order
-     * @throws IOException if file is not directory
+     * @throws IllegalArgumentException if file is not directory or order is null
      */
-    public TextIndexer(String path, Sortable<File> order) throws IOException {
+    public TextIndexer(String path, Sortable<File> order) {
         super(path, order);
     }
 
@@ -43,9 +43,9 @@ public class TextIndexer extends FileIndexer{
      * Instantiates a new Text indexer.
      *
      * @param root the directory
-     * @throws IOException if file is not directory
+     * @throws IllegalArgumentException if file is not directory
      */
-    public TextIndexer(File root) throws IOException {
+    public TextIndexer(File root) {
         super(root);
     }
 
@@ -54,9 +54,9 @@ public class TextIndexer extends FileIndexer{
      *
      * @param root  the directory
      * @param order the sorting order
-     * @throws IOException if file is not directory
+     * @throws IllegalArgumentException if file is not directory or order is null
      */
-    public TextIndexer(File root, Sortable<File> order) throws IOException {
+    public TextIndexer(File root, Sortable<File> order)  {
         super(root, order);
     }
 

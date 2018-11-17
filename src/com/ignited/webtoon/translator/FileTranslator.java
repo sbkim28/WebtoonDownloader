@@ -10,7 +10,7 @@ import java.io.*;
  * @author Ignited
  * @see com.ignited.webtoon.translator.Translator
  */
-public abstract class FileTranslator implements Translator{
+public abstract class FileTranslator implements Translator, Runnable{
 
     /**
      * The Image Files.

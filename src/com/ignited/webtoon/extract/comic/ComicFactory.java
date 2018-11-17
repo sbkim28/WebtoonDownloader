@@ -1,6 +1,8 @@
 package com.ignited.webtoon.extract.comic;
 
 
+import com.ignited.webtoon.extract.comic.e.ComicFinderInitException;
+
 import java.io.IOException;
 
 /**
@@ -16,9 +18,9 @@ public interface ComicFactory {
      * Return the finder.
      *
      * @return the finder
-     * @throws IOException when it failed to instantiate the new Finder
+     * @throws ComicFinderInitException when it failed to instantiate the new Finder
      */
-    Finder finder() throws IOException;
+    Finder finder() throws ComicFinderInitException;
 
     /**
      * Instantiate and return the new Downloader
