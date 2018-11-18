@@ -31,13 +31,12 @@ public enum ComicTypeFactory implements ComicFactory {
      * The NaverComic
      */
     NAVER{
-        private NaverComicFinder finder;
         @Override
         public Finder finder() throws ComicFinderInitException {
-            if (finder == null) {
-                finder = new NaverComicFinder();
+            if(!NAVER_COMIC_FINDER.isInited()){
+                NAVER_COMIC_FINDER.init();
             }
-            return finder;
+            return NAVER_COMIC_FINDER;
         }
 
         @Override
@@ -51,13 +50,12 @@ public enum ComicTypeFactory implements ComicFactory {
      * The DaumComic
      */
     DAUM{
-        private DaumComicFinder finder;
         @Override
         public Finder finder() throws ComicFinderInitException {
-            if (finder == null) {
-                finder = new DaumComicFinder();
+            if(!DAUM_COMIC_FINDER.isInited()){
+                DAUM_COMIC_FINDER.init();
             }
-            return finder;
+            return DAUM_COMIC_FINDER;
         }
 
         @Override
@@ -74,14 +72,13 @@ public enum ComicTypeFactory implements ComicFactory {
     /**
      * The NaverComic with cookie
      */
-    NAVER_COOKIE{
-        private NaverComicFinder finder;
+    NAVER_COOKIE {
         @Override
         public Finder finder() throws ComicFinderInitException {
-            if (finder == null) {
-                finder = new NaverComicFinder();
+            if(!NAVER_COMIC_FINDER.isInited()){
+                NAVER_COMIC_FINDER.init();
             }
-            return finder;
+            return NAVER_COMIC_FINDER;
         }
 
         @Override
@@ -94,14 +91,12 @@ public enum ComicTypeFactory implements ComicFactory {
      * The LezhinComic.
      */
     LEZHIN {
-
-        private LezhinComicFinder finder;
         @Override
         public Finder finder() throws ComicFinderInitException {
-            if (finder == null) {
-                finder = new LezhinComicFinder();
+            if(!LEZHIN_COMIC_FINDER.isInited()){
+                LEZHIN_COMIC_FINDER.init();
             }
-            return finder;
+            return LEZHIN_COMIC_FINDER;
         }
 
         @Override
@@ -114,5 +109,10 @@ public enum ComicTypeFactory implements ComicFactory {
             }
         }
 
-    }
+    };
+
+    private static final NaverComicFinder NAVER_COMIC_FINDER = new NaverComicFinder();
+    private static final DaumComicFinder DAUM_COMIC_FINDER = new DaumComicFinder();
+    private static final LezhinComicFinder LEZHIN_COMIC_FINDER = new LezhinComicFinder();
+
 }

@@ -30,9 +30,8 @@ public class NaverComicFinder extends Finder {
     /**
      * Instantiates a new Naver comic finder.
      *
-     * @throws ComicFinderInitException when it failed to initialize
      */
-    public NaverComicFinder() throws ComicFinderInitException {
+    public NaverComicFinder() {
         super();
     }
 
@@ -41,9 +40,8 @@ public class NaverComicFinder extends Finder {
      *
      * @param maxTry the max try to connect and get elements
      * @param wait   the wait time in millis after failure
-     * @throws ComicFinderInitException when it failed to initialize
      */
-    public NaverComicFinder(int maxTry, int wait) throws ComicFinderInitException {
+    public NaverComicFinder(int maxTry, int wait)  {
         super(maxTry, wait);
     }
 

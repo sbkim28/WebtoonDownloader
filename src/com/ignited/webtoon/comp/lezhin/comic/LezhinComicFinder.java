@@ -33,10 +33,8 @@ public class LezhinComicFinder extends Finder{
 
     /**
      * Instantiates a new LezhinComicFinder.
-     *
-     * @throws ComicFinderInitException when it failed to initiate
      */
-    public LezhinComicFinder() throws ComicFinderInitException {
+    public LezhinComicFinder() {
         super();
     }
 
@@ -45,9 +43,8 @@ public class LezhinComicFinder extends Finder{
      *
      * @param maxTry the max try to connect and get elements
      * @param wait   the wait time in millis after failure
-     * @throws ComicFinderInitException when it failed to initialize
      */
-    public LezhinComicFinder(int maxTry, int wait) throws ComicFinderInitException {
+    public LezhinComicFinder(int maxTry, int wait) {
         super(maxTry, wait);
     }
 

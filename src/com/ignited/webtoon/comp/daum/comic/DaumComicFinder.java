@@ -32,9 +32,8 @@ public class DaumComicFinder extends Finder{
     /**
      * Instantiates a new Daum comic finder.
      *
-     * @throws ComicFinderInitException when it failed to initialize.
      */
-    public DaumComicFinder() throws ComicFinderInitException {
+    public DaumComicFinder() {
         super();
     }
 
@@ -43,9 +42,8 @@ public class DaumComicFinder extends Finder{
      *
      * @param maxTry the max try to connect and get elements
      * @param wait   the wait time in millis after failure
-     * @throws ComicFinderInitException when it failed to initialize
      */
-    public DaumComicFinder(int maxTry, int wait) throws ComicFinderInitException {
+    public DaumComicFinder(int maxTry, int wait) {
         super(maxTry, wait);
     }
 

@@ -18,12 +18,14 @@ public abstract class Finder{
 
     private List<ComicInfo> items;
 
+    private int maxTry;
+    private int wait;
+    private boolean inited;
+
     /**
      * Instantiates a new Finder.
-     *
-     * @throws ComicFinderInitException when it failed to initialize
      */
-    public Finder() throws ComicFinderInitException {
+    protected Finder() {
         this(2, 5000);
     }
 
@@ -33,14 +35,26 @@ public abstract class Finder{
      *
      * @param maxTry the max try to connect and get elements
      * @param wait   the wait time in millis after failure
+     */
+    protected Finder(int maxTry, int wait) {
+        this.maxTry = maxTry;
+        this.wait = wait;
+        inited = false;
+    }
+
+    /**
+     * initialize finder.
+     *
      * @throws ComicFinderInitException when it failed to initialize
      */
-    public Finder(int maxTry, int wait) throws ComicFinderInitException {
+    public final synchronized void init() throws ComicFinderInitException {
+        if(inited) return;
         int i = 1;
         while (true){
 
             try {
                 items = initialize();
+                inited = true;
                 break;
             }catch (IOException e){
                 System.err.println(e.getClass().getName() + ":" + e.getMessage());
@@ -50,12 +64,15 @@ public abstract class Finder{
                     throw new ComicFinderInitException(e);
                 }
                 items = null;
+                inited = false;
                 try {
                     Thread.sleep(wait);
                 } catch (InterruptedException e1) {
                     throw new ComicFinderInitException(e1);
                 }
             }catch (Exception e){
+                items = null;
+                inited = false;
                 throw new ComicFinderInitException(e);
             }
         }
@@ -107,6 +124,10 @@ public abstract class Finder{
         return ret;
     }
 
+    public List<ComicInfo> getAll(){
+        return new ArrayList<>(items);
+    }
+
     /**
      * Initialize list.
      *
@@ -114,4 +135,8 @@ public abstract class Finder{
      * @throws IOException when it failed to initialize
      */
     protected abstract List<ComicInfo> initialize() throws IOException;
+
+    public boolean isInited(){
+        return inited;
+    }
 }

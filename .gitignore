@@ -4,4 +4,6 @@ src/META-INF/
 src/com/ignited/webtoon/comp/naver/data
 src/com/ignited/webtoon/comp/daum/data
 src/com/ignited/webtoon/comp/lezhin/data
+src/com/ignited/webtoon/view/gui
 src/com/ignited/TEST.java
+src/com/ignited/data
