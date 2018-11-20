@@ -13,6 +13,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * Lezhin comic cataloger.
+ *
+ * @author Ignited
+ * @see com.ignited.webtoon.extract.comic.Cataloger
+ */
 public class LezhinComicCataloger extends Cataloger {
     private final String url = "https://www.lezhin.com/api/v2/comics?adult_kind=all&store=web&offset=";
     private final String limit = "&limit=";

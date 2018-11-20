@@ -11,6 +11,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Naver comic cataloger.
+ *
+ * @author Ignited
+ * @see com.ignited.webtoon.extract.comic.Cataloger
+ */
 public class NaverComicCataloger extends Cataloger {
 
     private final String url = "https://comic.naver.com/webtoon/creation.nhn";

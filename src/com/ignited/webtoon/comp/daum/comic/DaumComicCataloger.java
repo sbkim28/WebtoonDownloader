@@ -12,6 +12,12 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Daum comic cataloger.
+ *
+ * @author Ignited
+ * @see com.ignited.webtoon.extract.comic.Cataloger
+ */
 public class DaumComicCataloger extends Cataloger {
     private final String urlFinished = "http://webtoon.daum.net/data/pc/webtoon/list_finished/?genre_id=";
     private final String urlBase = "http://webtoon.daum.net/data/pc/webtoon/list_serialized/";
