@@ -3,9 +3,8 @@ package com.ignited.webtoon.comp.daum.comic;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.ignited.webtoon.extract.comic.Cataloger;
 import com.ignited.webtoon.extract.comic.ComicInfo;
-import com.ignited.webtoon.extract.comic.Finder;
-import com.ignited.webtoon.extract.comic.e.ComicFinderInitException;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,42 +12,32 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-
-/**
- * DaumComicFinder
- *
- * Find Daum Webtoons
- *
- * @author Ignited
- * @see com.ignited.webtoon.extract.comic.Finder
- */
-public class DaumComicFinder extends Finder{
-
+public class DaumComicCataloger extends Cataloger {
     private final String urlFinished = "http://webtoon.daum.net/data/pc/webtoon/list_finished/?genre_id=";
     private final String urlBase = "http://webtoon.daum.net/data/pc/webtoon/list_serialized/";
 
     private String[] day;
 
     /**
-     * Instantiates a new Daum comic finder.
+     * Instantiates a new Daum comic cataloger.
      *
      */
-    public DaumComicFinder() {
+    public DaumComicCataloger() {
         super();
     }
 
     /**
-     * Instantiates a new Finder.
+     * Instantiates a new Daum comic cataloger.
      *
      * @param maxTry the max try to connect and get elements
      * @param wait   the wait time in millis after failure
      */
-    public DaumComicFinder(int maxTry, int wait) {
+    public DaumComicCataloger(int maxTry, int wait) {
         super(maxTry, wait);
     }
 
     @Override
-    protected List<ComicInfo> initialize() throws IOException {
+    protected List<ComicInfo> deliver() throws IOException {
         List<ComicInfo> ret = new ArrayList<>();
         day = new String[]{
                 "mon", "tue","wed","thu", "fri", "sat", "sun"

@@ -9,6 +9,7 @@ import com.ignited.webtoon.indexer.order.Order;
 import com.ignited.webtoon.indexer.TextIndexer;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -42,8 +43,7 @@ public class ComicWriteManager {
      * @throws ComicException when it failed to download
      */
     public static void executeOne(ComicFactory factory, String name, String path, int index) throws ComicException {
-        Finder finder = factory.finder();
-        Downloader downloader = factory.downloader(findInfo(finder, name));
+        Downloader downloader = factory.downloader(findInfo(factory, name));
         downloader.setPath(path);
 
         downloader.download(index);
@@ -71,8 +71,7 @@ public class ComicWriteManager {
      * @throws IOException when it failed to download
      */
     public static void execute(ComicFactory factory, String name, String path, int index) throws IOException, ComicException {
-        Finder finder = factory.finder();
-        Downloader downloader = factory.downloader(findInfo(finder,name));
+        Downloader downloader = factory.downloader(findInfo(factory,name));
         downloader.setPath(path);
         for(int i = index;i<downloader.size();++i){
             downloader.download(i);
@@ -91,8 +90,7 @@ public class ComicWriteManager {
      * @throws IOException when it failed to download
      */
     public static void execute(ComicFactory factory , String name, String path, int index, Map<String, String> cookieSet) throws IOException, ComicException {
-        Finder finder = factory.finder();
-        Downloader downloader = factory.downloader(findInfo(finder, name));
+        Downloader downloader = factory.downloader(findInfo(factory, name));
         downloader.setPath(path);
         if(downloader instanceof CookieSettable){
             ((CookieSettable) downloader).setCookies(cookieSet);
@@ -103,24 +101,19 @@ public class ComicWriteManager {
         setIndex(path);
     }
 
-    private static ComicInfo findInfo(Finder finder, String name) throws ComicNotFoundException {
-        ComicInfo info = finder.findMatch(name);
-        if(info == null) {
-            List<ComicInfo> infos = finder.findAllContains(name);
-            if (infos.size() == 0) {
-                throw new ComicNotFoundException(finder, name);
-            } else if (infos.size() == 1) {
-                info = infos.get(0);
-            } else {
-                for (ComicInfo i : infos) {
-                    if (i.getTitle().indexOf(name) == 0) {
-                        info = i;
-                        break;
-                    }
-                }
-                if (info == null) info = infos.get(0);
+    private static ComicInfo findInfo(ComicFactory factory, String name) throws ComicException {
+        List<ComicInfo> infos = factory.cataloger().catalog().getList();
+        List<ComicInfo> containsKeywords = new ArrayList<>();
+        for (ComicInfo info : infos){
+            if(info.getTitle().equals(name)){
+                return info;
+            }else if(info.getTitle().contains(name)){
+                containsKeywords.add(info);
             }
         }
-        return info;
+        if(containsKeywords.isEmpty()){
+            throw new ComicNotFoundException(factory.toString(), name);
+        }
+        return containsKeywords.get(0);
     }
 }

@@ -4,10 +4,9 @@ package com.ignited.webtoon.extract.comic.e;
  * The Comic finder init exception.
  *
  * @author Ignited
- * @see com.ignited.webtoon.extract.comic.e.ComicInitException
  * @see com.ignited.webtoon.extract.comic.e.ComicException
  */
-public class ComicFinderInitException extends ComicInitException {
+public class ComicFinderInitException extends ComicException {
 
     /**
      * Instantiates a new Comic finder init exception.

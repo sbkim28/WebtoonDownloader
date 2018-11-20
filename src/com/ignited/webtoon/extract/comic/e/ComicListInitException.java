@@ -4,10 +4,9 @@ package com.ignited.webtoon.extract.comic.e;
  * The Comic list init exception.
  *
  * @author Ignited
- * @see com.ignited.webtoon.extract.comic.e.ComicInitException
  * @see com.ignited.webtoon.extract.comic.e.ComicException
  */
-public class ComicListInitException extends ComicInitException {
+public class ComicListInitException extends ComicException {
 
     /**
      * Instantiates a new Comic list init exception.

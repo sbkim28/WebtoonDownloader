@@ -1,26 +1,21 @@
 package com.ignited.webtoon.comp;
 
+import com.ignited.webtoon.comp.daum.comic.DaumComicCataloger;
 import com.ignited.webtoon.comp.daum.comic.DaumComicDownloader;
-import com.ignited.webtoon.comp.daum.comic.DaumComicFinder;
+import com.ignited.webtoon.comp.lezhin.comic.LezhinComicCataloger;
 import com.ignited.webtoon.comp.lezhin.comic.LezhinComicDownloader;
-import com.ignited.webtoon.comp.lezhin.comic.LezhinComicFinder;
+import com.ignited.webtoon.comp.naver.comic.NaverComicCataloger;
 import com.ignited.webtoon.comp.naver.comic.NaverComicCookieDownloader;
 import com.ignited.webtoon.comp.naver.comic.NaverComicDownloader;
-import com.ignited.webtoon.comp.naver.comic.NaverComicFinder;
-import com.ignited.webtoon.extract.comic.ComicFactory;
-import com.ignited.webtoon.extract.comic.ComicInfo;
-import com.ignited.webtoon.extract.comic.Downloader;
-import com.ignited.webtoon.extract.comic.Finder;
+import com.ignited.webtoon.extract.comic.*;
 import com.ignited.webtoon.extract.comic.e.ComicFinderInitException;
 import com.ignited.webtoon.extract.comic.e.ComicListInitException;
-
-import java.io.IOException;
 
 
 /**
  * ComicTypeFactory
  * <p>
- * Comic Factory creating Finder and Downloader of Naver and Daum webtoon
+ * Comic Factory creating Cataloger and Downloader of Naver, Daum, and Lezhin webtoon
  *
  * @author Ignited
  * @see com.ignited.webtoon.extract.comic.ComicFactory
@@ -31,17 +26,15 @@ public enum ComicTypeFactory implements ComicFactory {
      * The NaverComic
      */
     NAVER{
-        @Override
-        public Finder finder() throws ComicFinderInitException {
-            if(!NAVER_COMIC_FINDER.isInited()){
-                NAVER_COMIC_FINDER.init();
-            }
-            return NAVER_COMIC_FINDER;
-        }
 
         @Override
         public Downloader downloader(ComicInfo info) {
             return new NaverComicDownloader(info);
+        }
+
+        @Override
+        public Cataloger cataloger() {
+            return new NaverComicCataloger();
         }
 
     },
@@ -51,14 +44,6 @@ public enum ComicTypeFactory implements ComicFactory {
      */
     DAUM{
         @Override
-        public Finder finder() throws ComicFinderInitException {
-            if(!DAUM_COMIC_FINDER.isInited()){
-                DAUM_COMIC_FINDER.init();
-            }
-            return DAUM_COMIC_FINDER;
-        }
-
-        @Override
         public Downloader downloader(ComicInfo info) {
             try {
                 return new DaumComicDownloader(info);
@@ -67,23 +52,26 @@ public enum ComicTypeFactory implements ComicFactory {
                 return null;
             }
         }
+
+        @Override
+        public Cataloger cataloger() {
+            return new DaumComicCataloger();
+        }
     },
 
     /**
      * The NaverComic with cookie
      */
     NAVER_COOKIE {
-        @Override
-        public Finder finder() throws ComicFinderInitException {
-            if(!NAVER_COMIC_FINDER.isInited()){
-                NAVER_COMIC_FINDER.init();
-            }
-            return NAVER_COMIC_FINDER;
-        }
 
         @Override
         public Downloader downloader(ComicInfo info) {
             return new NaverComicCookieDownloader(info);
+        }
+
+        @Override
+        public Cataloger cataloger() {
+            return new NaverComicCataloger();
         }
     },
 
@@ -91,13 +79,6 @@ public enum ComicTypeFactory implements ComicFactory {
      * The LezhinComic.
      */
     LEZHIN {
-        @Override
-        public Finder finder() throws ComicFinderInitException {
-            if(!LEZHIN_COMIC_FINDER.isInited()){
-                LEZHIN_COMIC_FINDER.init();
-            }
-            return LEZHIN_COMIC_FINDER;
-        }
 
         @Override
         public Downloader downloader(ComicInfo info) {
@@ -109,10 +90,10 @@ public enum ComicTypeFactory implements ComicFactory {
             }
         }
 
+        @Override
+        public Cataloger cataloger() {
+            return new LezhinComicCataloger();
+        }
     };
-
-    private static final NaverComicFinder NAVER_COMIC_FINDER = new NaverComicFinder();
-    private static final DaumComicFinder DAUM_COMIC_FINDER = new DaumComicFinder();
-    private static final LezhinComicFinder LEZHIN_COMIC_FINDER = new LezhinComicFinder();
 
 }

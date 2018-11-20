@@ -36,7 +36,6 @@ public class LezhinComicImageLoader implements ImageLoader {
                 String u = String.format(url, comicId, episodeId, i);
                 HttpURLConnection con = (HttpURLConnection) new URL(u).openConnection();
                 int res = con.getResponseCode();
-                System.out.println(res);
                 if(res == 200) {
                     ret.add(u);
                 }else if(res == 404){

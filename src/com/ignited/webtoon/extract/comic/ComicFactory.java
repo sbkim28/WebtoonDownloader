@@ -7,21 +7,12 @@ import java.io.IOException;
 
 /**
  * ComicFactory
- *
+ * <p>
  * Comic Factory creating finder and donwloader
  *
  * @author Ignited
  */
 public interface ComicFactory {
-
-    /**
-     * Return the finder.
-     *
-     * @return the finder
-     * @throws ComicFinderInitException when it failed to instantiate the new Finder
-     */
-    Finder finder() throws ComicFinderInitException;
-
     /**
      * Instantiate and return the new Downloader
      *
@@ -29,5 +20,13 @@ public interface ComicFactory {
      * @return the downloader
      */
     Downloader downloader(ComicInfo info);
+
+
+    /**
+     * Instantiate and return the new Cataloger
+     *
+     * @return the cataloger
+     */
+    Cataloger cataloger();
 
 }

@@ -1,52 +1,42 @@
 package com.ignited.webtoon.comp.naver.comic;
 
+import com.ignited.webtoon.extract.comic.Cataloger;
 import com.ignited.webtoon.extract.comic.ComicInfo;
-import com.ignited.webtoon.extract.comic.Finder;
-import com.ignited.webtoon.extract.comic.e.ComicFinderInitException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * NaverComicFinder
- *
- * Find Naver Webtoons
- *
- * @author Ignited
- * @see com.ignited.webtoon.extract.comic.Finder
- */
-public class NaverComicFinder extends Finder {
+public class NaverComicCataloger extends Cataloger {
 
     private final String url = "https://comic.naver.com/webtoon/creation.nhn";
 
     private final String titleId = "titleId=";
 
     /**
-     * Instantiates a new Naver comic finder.
+     * Instantiates a new Naver comic cataloger.
      *
      */
-    public NaverComicFinder() {
+    public NaverComicCataloger() {
         super();
     }
 
     /**
-     * Instantiates a new Finder.
+     * Instantiates a new Naver comic cataloger.
      *
      * @param maxTry the max try to connect and get elements
      * @param wait   the wait time in millis after failure
      */
-    public NaverComicFinder(int maxTry, int wait)  {
+    public NaverComicCataloger(int maxTry, int wait)  {
         super(maxTry, wait);
     }
 
     @Override
-    protected List<ComicInfo> initialize() throws IOException {
+    protected List<ComicInfo> deliver() throws IOException {
         Document doc = Jsoup.connect(url).get();
         String qAllList = "all_list";
         String qli = "li";
@@ -70,5 +60,5 @@ public class NaverComicFinder extends Finder {
 
         return info;
     }
-}
 
+}
