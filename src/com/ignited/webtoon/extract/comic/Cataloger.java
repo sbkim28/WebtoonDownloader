@@ -1,11 +1,11 @@
 package com.ignited.webtoon.extract.comic;
 
 import com.ignited.webtoon.extract.comic.e.ComicCatalogException;
-import com.ignited.webtoon.extract.comic.e.ComicFinderInitException;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Cataloger
@@ -15,6 +15,8 @@ import java.util.List;
  * @author Ignited
  */
 public abstract class Cataloger {
+
+    private static final Logger LOGGER = Logger.getLogger(Cataloger.class.getName());
 
     private List<ComicInfo> items;
 
@@ -69,9 +71,9 @@ public abstract class Cataloger {
                     items = deliver();
                     break;
                 }catch (IOException e){
-                    System.err.println(e.getClass().getName() + ":" + e.getMessage());
-                    System.err.println("Failed to initialize finder");
-                    System.err.println("Left attempt : " + (maxTry - i));
+                    LOGGER.warning(e.getClass().getName() + ":" + e.getMessage());
+                    LOGGER.warning("Failed to catalog");
+                    LOGGER.warning("Left attempt : " + (maxTry - i));
                     if(++i > maxTry){
                         throw new ComicCatalogException(e);
                     }
@@ -106,7 +108,7 @@ public abstract class Cataloger {
      * @return the list
      */
     public List<ComicInfo> getList(){
-        return new ArrayList<>(items);
+        return items;
     }
 
     /**

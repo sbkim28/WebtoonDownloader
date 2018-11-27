@@ -2,7 +2,6 @@ package com.ignited.webtoon.extract;
 
 import com.ignited.webtoon.extract.comic.*;
 import com.ignited.webtoon.extract.comic.e.ComicException;
-import com.ignited.webtoon.extract.comic.e.ComicFinderInitException;
 import com.ignited.webtoon.extract.comic.e.ComicNotFoundException;
 import com.ignited.webtoon.indexer.FileIndexer;
 import com.ignited.webtoon.indexer.order.Order;

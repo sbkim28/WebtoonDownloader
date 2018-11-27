@@ -4,6 +4,7 @@ import com.ignited.webtoon.extract.comic.e.ComicListInitException;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * ListDonwloader
@@ -14,6 +15,8 @@ import java.util.List;
  * @see com.ignited.webtoon.extract.comic.Downloader
  */
 public abstract class ListDownloader extends Downloader{
+
+    private static Logger LOGGER = Logger.getLogger(ListDownloader.class.getName());
 
 
     public static final int DEFAULT_MAXTRY = 2;
@@ -51,9 +54,9 @@ public abstract class ListDownloader extends Downloader{
                 initItems();
                 break;
             } catch (IOException e) {
-                System.err.println(e.getClass().getName() + ":" + e.getMessage());
-                System.err.println("Failed to init item list");
-                System.err.println("Left attempt : " + (maxTry - i));
+                LOGGER.warning(e.getClass().getName() + ":" + e.getMessage());
+                LOGGER.warning("Failed to init item list");
+                LOGGER.warning("Left attempt : " + (maxTry - i));
 
                 if(++i > maxTry){
                     throw new ComicListInitException(e);

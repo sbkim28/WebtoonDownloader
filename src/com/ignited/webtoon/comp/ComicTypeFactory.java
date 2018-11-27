@@ -8,7 +8,6 @@ import com.ignited.webtoon.comp.naver.comic.NaverComicCataloger;
 import com.ignited.webtoon.comp.naver.comic.NaverComicCookieDownloader;
 import com.ignited.webtoon.comp.naver.comic.NaverComicDownloader;
 import com.ignited.webtoon.extract.comic.*;
-import com.ignited.webtoon.extract.comic.e.ComicFinderInitException;
 import com.ignited.webtoon.extract.comic.e.ComicListInitException;
 
 

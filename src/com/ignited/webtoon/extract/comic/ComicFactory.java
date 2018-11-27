@@ -1,10 +1,6 @@
 package com.ignited.webtoon.extract.comic;
 
 
-import com.ignited.webtoon.extract.comic.e.ComicFinderInitException;
-
-import java.io.IOException;
-
 /**
  * ComicFactory
  * <p>
