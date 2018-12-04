@@ -71,7 +71,7 @@ public class DaumComicDownloader extends ListDownloader {
 
     @Override
     protected void initItems() throws IOException {
-        if(!"DAUM".equalsIgnoreCase(info.getType())) throw new IllegalArgumentException("Unmatching comic type");
+        if(!"DAUM".equals(info.getType())) throw new IllegalArgumentException("Unmatching comic type");
         items = new ArrayList<>();
 
         JsonArray array = new JsonParser().parse(new InputStreamReader(new URL(listUrl + info.getId()).openStream(), "UTF-8")).getAsJsonObject().get("data")

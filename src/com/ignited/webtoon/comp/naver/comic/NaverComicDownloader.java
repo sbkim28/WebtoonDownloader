@@ -2,19 +2,21 @@ package com.ignited.webtoon.comp.naver.comic;
 
 import com.ignited.webtoon.extract.*;
 import com.ignited.webtoon.extract.comic.ComicInfo;
+import com.ignited.webtoon.extract.comic.CookieSettable;
 import com.ignited.webtoon.extract.comic.Downloader;
 import com.ignited.webtoon.extract.comic.e.ComicAccessException;
 import com.ignited.webtoon.extract.comic.e.ComicDownloadException;
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * NaverComicDownloader
  * @author Ignited
  * @see com.ignited.webtoon.extract.comic.Downloader
  */
-public class NaverComicDownloader extends Downloader {
+public class NaverComicDownloader extends Downloader implements CookieSettable {
 
     private final String detailUrl = "https://comic.naver.com/webtoon/detail.nhn";
     private final String listUrl = "https://comic.naver.com/webtoon/list.nhn";
@@ -28,7 +30,7 @@ public class NaverComicDownloader extends Downloader {
     /**
      * The Html Document
      */
-    protected ReadDocument doc;
+    private ReadDocument doc;
 
     /**
      * Instantiates a new Naver comic downloader.
@@ -47,10 +49,10 @@ public class NaverComicDownloader extends Downloader {
      */
     public NaverComicDownloader(ComicInfo info, String path){
         super(info, path);
-        if(!"NAVER".equalsIgnoreCase(info.getType())) throw new IllegalArgumentException("Unmatching comic type");
+        if(!"NAVER".equals(info.getType())) throw new IllegalArgumentException("Unmatching comic type");
         this.saver = new NaverComicSaver(path);
         this.loader = new NaverComicImageLoader(null);
-        this.doc = new ReadDocument();
+        doc = new ReadDocument();
         setSize();
     }
 
@@ -62,6 +64,7 @@ public class NaverComicDownloader extends Downloader {
         } catch (IOException e) {
             throw new ComicDownloadException(e);
         }
+
         if(!doc.getDoc().baseUri().contains(detailUrl)){
             throw new ComicAccessException("Unable to access " + url);
         }
@@ -90,5 +93,10 @@ public class NaverComicDownloader extends Downloader {
     @Override
     public int size() {
         return size;
+    }
+
+    @Override
+    public void setCookies(Map<String, String> cookies) {
+        doc.setCookies(cookies);
     }
 }

@@ -4,11 +4,14 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
+import java.util.Map;
 
 
 /**
  * ReadDocument
- * Read Html Document
+ * Read HTML Document
+ *
+ * @author Ignited
  */
 public class ReadDocument {
 
@@ -16,20 +19,35 @@ public class ReadDocument {
      * The Html document.
      */
     protected Document doc;
+    private Map<String, String> cookies;
 
     /**
-     * Instantiates a new Read document.
+     * Instantiates a new Read cookie document.
      */
     public ReadDocument() { }
 
+
     /**
-     * Read.
+     * Instantiates a new Read cookie document.
      *
-     * @param url the url
-     * @throws IOException the io exception
+     * @param cookies the cookies
      */
+    public ReadDocument(Map<String, String> cookies) {
+        this.cookies = cookies;
+    }
+
+    /**
+     * Sets cookies.
+     *
+     * @param cookies the cookies
+     */
+    public void setCookies(Map<String, String> cookies) {
+        this.cookies = cookies;
+    }
+
     public void read(String url) throws IOException {
-        doc = Jsoup.connect(url).get();
+        doc = Jsoup.connect(url)
+                .cookies(cookies).get();
     }
 
     /**

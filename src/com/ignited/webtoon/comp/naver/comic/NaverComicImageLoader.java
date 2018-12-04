@@ -1,7 +1,7 @@
 package com.ignited.webtoon.comp.naver.comic;
 
-import com.ignited.webtoon.extract.comic.ImageLoader;
 import com.ignited.webtoon.extract.ReadDocument;
+import com.ignited.webtoon.extract.comic.ImageLoader;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 

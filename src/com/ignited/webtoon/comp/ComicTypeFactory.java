@@ -5,7 +5,6 @@ import com.ignited.webtoon.comp.daum.comic.DaumComicDownloader;
 import com.ignited.webtoon.comp.lezhin.comic.LezhinComicCataloger;
 import com.ignited.webtoon.comp.lezhin.comic.LezhinComicDownloader;
 import com.ignited.webtoon.comp.naver.comic.NaverComicCataloger;
-import com.ignited.webtoon.comp.naver.comic.NaverComicCookieDownloader;
 import com.ignited.webtoon.comp.naver.comic.NaverComicDownloader;
 import com.ignited.webtoon.extract.comic.*;
 import com.ignited.webtoon.extract.comic.e.ComicListInitException;
@@ -55,22 +54,6 @@ public enum ComicTypeFactory implements ComicFactory {
         @Override
         public Cataloger cataloger() {
             return new DaumComicCataloger();
-        }
-    },
-
-    /**
-     * The NaverComic with cookie
-     */
-    NAVER_COOKIE {
-
-        @Override
-        public Downloader downloader(ComicInfo info) {
-            return new NaverComicCookieDownloader(info);
-        }
-
-        @Override
-        public Cataloger cataloger() {
-            return new NaverComicCataloger();
         }
     },
 

@@ -64,7 +64,7 @@ public class LezhinComicDownloader extends ListDownloader {
 
     @Override
     protected void initItems() throws IOException {
-        if(!"LEZHIN".equalsIgnoreCase(info.getType())) throw new IllegalArgumentException("Unmatching comic type");
+        if(!"LEZHIN".equals(info.getType())) throw new IllegalArgumentException("Unmatching comic type");
         items = new ArrayList<>();
         Document doc = Jsoup.connect(list_url + ((LezhinComicInfo) info).getAlias())
                 .get();
