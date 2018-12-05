@@ -15,19 +15,48 @@ import org.jsoup.Jsoup;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * The Kakao comic downloader.
+ *
+ * @author Ignited
+ * @see com.ignited.webtoon.extract.comic.ListDownloader
+ * @see com.ignited.webtoon.extract.comic.Downloader
+ */
 public class KakaoComicDownloader extends ListDownloader {
 
     private static final String url = "https://api2-page.kakao.com/api/v5/store/singles";
     private static final String view = "https://api2-page.kakao.com/api/v1/inven/get_download_data/web";
 
+    /**
+     * Instantiates a new Kakao comic downloader.
+     *
+     * @param info the information about kakao webtoon
+     * @throws ComicListInitException the comic list init exception
+     */
     public KakaoComicDownloader(ComicInfo info) throws ComicListInitException {
         this(info, null);
     }
 
+    /**
+     * Instantiates a new Kakao comic downloader.
+     *
+     * @param info the information about kakao webtoon
+     * @param path the location where the webtoon will be saved
+     * @throws ComicListInitException the comic list init exception
+     */
     public KakaoComicDownloader(ComicInfo info, String path) throws ComicListInitException {
         this(info, path, DEFAULT_MAXTRY, DEFAULT_WAIT);
     }
 
+    /**
+     * Instantiates a new Kakao comic downloader.
+     *
+     * @param info the information about kakao webtoon
+     * @param path the location where the webtoon will be saved
+     * @param maxTry the max try to connect and get elements
+     * @param wait   the wait time in millis after failure
+     * @throws ComicListInitException when it failed to get initial data.
+     */
     public KakaoComicDownloader(ComicInfo info, String path, int maxTry, int wait) throws ComicListInitException {
         super(info, path, maxTry, wait);
         this.saver = new ComicSaver(path);

@@ -1,14 +1,14 @@
 # WebtoonDownloader
-네이버나 다음 웹툰을 다운로드
+웹툰을 다운로드
 
 ## Usage
 java -jar WebtoonManager.jar
 
 -d : 웹툰 다운로드
--d comicType[naver, daum, lezhin] webtoonName path (index)
+-d comicType[naver, daum, lezhin, kakao] webtoonName path (index)
 
 -do : 웹툰의 한 화차만 다운로드
--do comicType[naver, daum, lezhin] webtoonName path index
+-do comicType[naver, daum, lezhin, kakao] webtoonName path index
 
 -i : 인덱스 파일 생성
 -i path
