@@ -51,7 +51,7 @@ public class NaverComicDownloader extends Downloader implements CookieSettable {
         super(info, path);
         if(!"NAVER".equals(info.getType())) throw new IllegalArgumentException("Unmatching comic type");
         this.saver = new NaverComicSaver(path);
-        this.loader = new NaverComicImageLoader(null);
+        this.loader = new NaverComicImageLoader();
         doc = new ReadDocument();
         setSize();
     }

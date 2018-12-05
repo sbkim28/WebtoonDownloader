@@ -27,6 +27,8 @@ public class ComicSaver {
     private String path;
     private String name;
 
+
+
     /**
      * Instantiates a new Comic saver.
      * as Default Image Name

@@ -43,8 +43,8 @@ public class RUN {
     }
 
     public static void printInfo(){
-        System.out.println("-d : download (-d <comictype[daum, naver, lezhin]> <name> <path> (<index>))");
-        System.out.println("-do : download one chapter (-do <comictype[daum, naver, lezhin]> <name> <path> <index>");
+        System.out.println("-d : download (-d <comictype[daum, naver, lezhin, kakao]> <name> <path> (<index>))");
+        System.out.println("-do : download one chapter (-do <comictype[daum, naver, lezhin, kakao]> <name> <path> <index>");
         System.out.println("-i : create index file (-i <path>");
         System.out.println("-r : read (-r <path> <page>)");
         System.out.println("-rf : read - searching files by filename (-r <path> <filename>)");
@@ -59,9 +59,10 @@ public class RUN {
             ComicWriteManager.execute(ComicTypeFactory.DAUM, name, path);
         }else if(type.equalsIgnoreCase("lezhin")) {
             ComicWriteManager.execute(ComicTypeFactory.LEZHIN, name, path);
+        }else if(type.equalsIgnoreCase("kakao")) {
+            ComicWriteManager.execute(ComicTypeFactory.KAKAO, name, path);
         }else{
             System.out.println("Not supported Comic type");
-
         }
     }
 
@@ -72,6 +73,8 @@ public class RUN {
             ComicWriteManager.execute(ComicTypeFactory.DAUM, name, path, Integer.parseInt(index));
         }else if(type.equalsIgnoreCase("lezhin")) {
             ComicWriteManager.execute(ComicTypeFactory.LEZHIN, name, path, Integer.parseInt(index));
+        }else if(type.equalsIgnoreCase("kakao")) {
+            ComicWriteManager.execute(ComicTypeFactory.KAKAO, name, path, Integer.parseInt(index));
         }else {
             System.out.println("Not supported Comic type");
         }
@@ -84,6 +87,8 @@ public class RUN {
             ComicWriteManager.executeOne(ComicTypeFactory.DAUM, name, path, Integer.parseInt(index));
         }else if(type.equalsIgnoreCase("lezhin")) {
             ComicWriteManager.executeOne(ComicTypeFactory.LEZHIN, name, path, Integer.parseInt(index));
+        }else if(type.equalsIgnoreCase("kakao")) {
+            ComicWriteManager.executeOne(ComicTypeFactory.KAKAO, name, path, Integer.parseInt(index));
         }else {
             System.out.println("Not supported Comic type");
         }

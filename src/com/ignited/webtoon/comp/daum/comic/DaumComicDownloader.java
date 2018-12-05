@@ -90,7 +90,7 @@ public class DaumComicDownloader extends ListDownloader {
     @Override
     public void download(int index) throws ComicDownloadException {
         String url = viewUrl + items.get(index).getId();
-        JsonObject obj = null;
+        JsonObject obj;
         try {
             obj = new JsonParser().parse(new InputStreamReader(new URL(url).openStream(), "UTF-8")).getAsJsonObject();
         } catch (IOException e) {

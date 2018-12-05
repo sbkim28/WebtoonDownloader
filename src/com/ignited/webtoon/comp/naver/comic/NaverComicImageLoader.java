@@ -22,6 +22,11 @@ public class NaverComicImageLoader implements ImageLoader {
 
     /**
      * Instantiates a new Naver comic image loader.
+     */
+    public NaverComicImageLoader() { }
+
+    /**
+     * Instantiates a new Naver comic image loader.
      *
      * @param rd the Html Document
      */

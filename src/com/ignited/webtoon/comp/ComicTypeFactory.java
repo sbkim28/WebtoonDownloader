@@ -2,6 +2,8 @@ package com.ignited.webtoon.comp;
 
 import com.ignited.webtoon.comp.daum.comic.DaumComicCataloger;
 import com.ignited.webtoon.comp.daum.comic.DaumComicDownloader;
+import com.ignited.webtoon.comp.kakao.comp.KakaoComicCataloger;
+import com.ignited.webtoon.comp.kakao.comp.KakaoComicDownloader;
 import com.ignited.webtoon.comp.lezhin.comic.LezhinComicCataloger;
 import com.ignited.webtoon.comp.lezhin.comic.LezhinComicDownloader;
 import com.ignited.webtoon.comp.naver.comic.NaverComicCataloger;
@@ -76,6 +78,23 @@ public enum ComicTypeFactory implements ComicFactory {
         public Cataloger cataloger() {
             return new LezhinComicCataloger();
         }
-    };
+    },
+
+    KAKAO{
+        @Override
+        public Downloader downloader(ComicInfo info) {
+            try {
+                return new KakaoComicDownloader(info);
+            } catch (ComicListInitException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        public Cataloger cataloger() {
+            return new KakaoComicCataloger();
+        }
+    }
 
 }
