@@ -7,8 +7,11 @@ import org.jsoup.Jsoup;
 
 import java.io.*;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public abstract class Login {
+
+    private static final Logger LOGGER = Logger.getLogger(Login.class.getName());
 
     private String id;
     private String password;
@@ -29,6 +32,7 @@ public abstract class Login {
                     .statusCode();
         } catch (IOException e) {
             e.printStackTrace();
+            LOGGER.warning("logout failed. (loginCookies=" + loginCookies + ", url="+getLogoutURL()+")");
             return false;
         }
         if(res == 200){

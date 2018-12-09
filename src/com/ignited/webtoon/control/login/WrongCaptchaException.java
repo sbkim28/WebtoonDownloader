@@ -4,14 +4,9 @@ public class WrongCaptchaException extends LoginFailException{
 
     private String chptchakey;
 
-    public WrongCaptchaException(String chptchakey) {
-        super("Wrong chptchakey: (" + chptchakey + ")");
-        this.chptchakey = chptchakey;
-
-    }
 
     public WrongCaptchaException(String message, String chptchakey) {
-        super(message + " (" + chptchakey + ")");
+        super(message);
         this.chptchakey = chptchakey;
     }
 

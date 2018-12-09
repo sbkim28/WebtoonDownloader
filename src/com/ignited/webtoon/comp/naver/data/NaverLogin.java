@@ -47,16 +47,20 @@ public class NaverLogin extends Login{
         if(isLogin()) logout();
 
         NaverRSA module = new NaverRSA();
-        String encnm;
-        String encpw;
+        String[] keys;
         try {
-            String[] keys = getKeys();
-            encnm = keys[1];
-            module.setPublic(keys[2], keys[3]);
-            String enc = getValueWithLength(keys[0]) + getValueWithLength(getId()) + getValueWithLength(getPassword());
+            keys = getKeys();
+        } catch (IOException e){
+            throw new LoginFailException("Getting key failed.", e);
+        }
+        String encnm = keys[1];
+        String encpw;
+        String enc = getValueWithLength(keys[0]) + getValueWithLength(getId()) + getValueWithLength(getPassword());
+        module.setPublic(keys[2], keys[3]);
+        try {
             encpw = module.encrypt(enc);
-        } catch (IOException | GeneralSecurityException e) {
-            throw new LoginFailException(e);
+        } catch (GeneralSecurityException e){
+            throw new LoginFailException("Login data encryption failed. (n=" + keys[2] + ", e=" + keys[3] + ", msg=" + enc + ")" , e);
         }
 
         Map<String, String> data = new HashMap<>();
@@ -87,13 +91,14 @@ public class NaverLogin extends Login{
 
             body = res.parse();
         } catch (IOException e) {
-            throw new LoginFailException(e);
+            throw new LoginFailException("Connection failed. (url=" + LOGIN + ", data=" + data + ")",e);
         }
 
         Elements chptchakeys;
         if((chptchakeys = body.select("#chptchakey")).size() == 1){
+            String s = chptchakey;
             chptchakey = chptchakeys.first().val();
-            if (onCaptcha) throw new WrongCaptchaException(captcha);
+            if (onCaptcha) throw new WrongCaptchaException("Login failed due to wrong captcha (key=" + s + ")", captcha);
             onCaptcha = true;
             return false;
         }
@@ -108,10 +113,10 @@ public class NaverLogin extends Login{
             try {
                 loginCookies = Jsoup.connect(redirect).execute().cookies();
             } catch (IOException e) {
-                throw new LoginFailException(e);
+                throw new LoginFailException("Getting login data failed. (redirect=" + redirect + ", body=" + strBody + ")" , e);
             }
         }else {
-            throw new WrongIdPasswordException(getId(), getPassword());
+            throw new WrongIdPasswordException("Wrong id or password (id=" + getId()+ ", pw=" + getPassword() + ", data = " + data + ", body=" + strBody + ")", getId(), getPassword());
         }
         return true;
     }
