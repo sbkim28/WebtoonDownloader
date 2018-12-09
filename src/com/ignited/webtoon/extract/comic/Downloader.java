@@ -42,6 +42,13 @@ public abstract class Downloader {
         this.saver = new ComicSaver(path);
     }
 
+    public Downloader(ComicInfo info, String path, ComicSaver saver) {
+        this.info = info;
+        this.path = path;
+        this.saver = saver;
+        this.saver.setPath(path);
+    }
+
     /**
      * Download a specific chapter of the webtoon.
      *
@@ -66,6 +73,15 @@ public abstract class Downloader {
         saver.setPath(path);
     }
 
+
+    /**
+     * Gets path.
+     *
+     * @return the path
+     */
+    public String getPath() {
+        return path;
+    }
 
     /**
      * Get the title of one specific chapter.

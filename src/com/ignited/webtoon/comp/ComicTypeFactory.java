@@ -29,7 +29,17 @@ public enum ComicTypeFactory implements ComicFactory {
 
         @Override
         public Downloader downloader(ComicInfo info) {
-            return new NaverComicDownloader(info);
+            return new NaverComicDownloader(info, null);
+        }
+
+        @Override
+        public Downloader downloader(ComicInfo info, String path) {
+            return new NaverComicDownloader(info, path);
+        }
+
+        @Override
+        public Downloader downloader(ComicInfo info, String path, ComicSaver saver) {
+            return new NaverComicDownloader(info, path, saver);
         }
 
         @Override
@@ -44,13 +54,18 @@ public enum ComicTypeFactory implements ComicFactory {
      */
     DAUM{
         @Override
-        public Downloader downloader(ComicInfo info) {
-            try {
-                return new DaumComicDownloader(info);
-            } catch (ComicListInitException e) {
-                e.printStackTrace();
-                return null;
-            }
+        public Downloader downloader(ComicInfo info) throws ComicListInitException {
+            return new DaumComicDownloader(info, null);
+        }
+
+        @Override
+        public Downloader downloader(ComicInfo info, String path) throws ComicListInitException {
+            return new DaumComicDownloader(info, path);
+        }
+
+        @Override
+        public Downloader downloader(ComicInfo info, String path, ComicSaver saver) throws ComicListInitException {
+            return new DaumComicDownloader(info, path, saver);
         }
 
         @Override
@@ -65,13 +80,18 @@ public enum ComicTypeFactory implements ComicFactory {
     LEZHIN {
 
         @Override
-        public Downloader downloader(ComicInfo info) {
-            try {
-                return new LezhinComicDownloader(info);
-            } catch (ComicListInitException e) {
-                e.printStackTrace();
-                return null;
-            }
+        public Downloader downloader(ComicInfo info) throws ComicListInitException {
+            return new LezhinComicDownloader(info, null);
+        }
+
+        @Override
+        public Downloader downloader(ComicInfo info, String path) throws ComicListInitException {
+            return new LezhinComicDownloader(info, path);
+        }
+
+        @Override
+        public Downloader downloader(ComicInfo info, String path, ComicSaver saver) throws ComicListInitException {
+            return new LezhinComicDownloader(info, path, saver);
         }
 
         @Override
@@ -82,19 +102,25 @@ public enum ComicTypeFactory implements ComicFactory {
 
     KAKAO{
         @Override
-        public Downloader downloader(ComicInfo info) {
-            try {
-                return new KakaoComicDownloader(info);
-            } catch (ComicListInitException e) {
-                e.printStackTrace();
-                return null;
-            }
+        public Downloader downloader(ComicInfo info) throws ComicListInitException {
+            return new KakaoComicDownloader(info,null);
+        }
+
+        @Override
+        public Downloader downloader(ComicInfo info, String path) throws ComicListInitException {
+            return new KakaoComicDownloader(info, path);
+        }
+
+        @Override
+        public Downloader downloader(ComicInfo info, String path, ComicSaver saver) throws ComicListInitException {
+            return new KakaoComicDownloader(info, path, saver);
         }
 
         @Override
         public Cataloger cataloger() {
             return new KakaoComicCataloger();
         }
-    }
+    };
 
 }
+

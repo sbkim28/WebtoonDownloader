@@ -42,7 +42,7 @@ public class ComicWriteManager {
      * @throws ComicException when it failed to download
      */
     public static void executeOne(ComicFactory factory, String name, String path, int index) throws ComicException {
-        Downloader downloader = factory.downloader(findInfo(factory, name));
+        Downloader downloader = factory.downloader(findInfo(factory, name), path);
         downloader.setPath(path);
 
         downloader.download(index);
@@ -70,8 +70,7 @@ public class ComicWriteManager {
      * @throws IOException when it failed to download
      */
     public static void execute(ComicFactory factory, String name, String path, int index) throws IOException, ComicException {
-        Downloader downloader = factory.downloader(findInfo(factory,name));
-        downloader.setPath(path);
+        Downloader downloader = factory.downloader(findInfo(factory,name), path);
         for(int i = index;i<downloader.size();++i){
             downloader.download(i);
         }
@@ -89,7 +88,7 @@ public class ComicWriteManager {
      * @throws IOException when it failed to download
      */
     public static void execute(ComicFactory factory , String name, String path, int index, Map<String, String> cookieSet) throws IOException, ComicException {
-        Downloader downloader = factory.downloader(findInfo(factory, name));
+        Downloader downloader = factory.downloader(findInfo(factory, name), path);
         downloader.setPath(path);
         if(downloader instanceof CookieSettable){
             ((CookieSettable) downloader).setCookies(cookieSet);

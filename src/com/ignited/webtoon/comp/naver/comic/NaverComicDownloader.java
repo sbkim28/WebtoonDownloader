@@ -2,6 +2,7 @@ package com.ignited.webtoon.comp.naver.comic;
 
 import com.ignited.webtoon.extract.*;
 import com.ignited.webtoon.extract.comic.ComicInfo;
+import com.ignited.webtoon.extract.comic.ComicSaver;
 import com.ignited.webtoon.extract.comic.CookieSettable;
 import com.ignited.webtoon.extract.comic.Downloader;
 import com.ignited.webtoon.extract.comic.e.ComicAccessException;
@@ -18,6 +19,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * NaverComicDownloader
@@ -25,6 +27,8 @@ import java.util.Map;
  * @see com.ignited.webtoon.extract.comic.Downloader
  */
 public class NaverComicDownloader extends Downloader implements CookieSettable {
+
+    private static final Logger LOGGER = Logger.getLogger(NaverComicCataloger.class.getName());
 
     private final String detailUrl = "https://comic.naver.com/webtoon/detail.nhn";
     private final String listUrl = "https://comic.naver.com/webtoon/list.nhn";
@@ -43,9 +47,11 @@ public class NaverComicDownloader extends Downloader implements CookieSettable {
      * Instantiates a new Naver comic downloader.
      *
      * @param info the information about naver webtoon
+     * @param path the location where the webtoon will be saved
      */
-    public NaverComicDownloader(ComicInfo info) {
-        this(info, null);
+    public NaverComicDownloader(ComicInfo info, String path){
+        this(info, path, new ComicSaver(path));
+
     }
 
     /**
@@ -53,24 +59,26 @@ public class NaverComicDownloader extends Downloader implements CookieSettable {
      *
      * @param info the information about naver webtoon
      * @param path the location where the webtoon will be saved
+     * @param saver the saver
      */
-    public NaverComicDownloader(ComicInfo info, String path){
-        super(info, path);
-        if(!"NAVER".equals(info.getType())) throw new IllegalArgumentException("Unmatching comic type");
+    public NaverComicDownloader(ComicInfo info, String path, ComicSaver saver) {
+        super(info, path, saver);
+        if(!"NAVER".equals(info.getType())) throw new IllegalArgumentException("Unmatching comic type. (expected=NAVER, type=" + info.getType() + ")");
         saver.setUbs(url -> {
             URLConnection conn = new URL(url).openConnection();
             conn.setRequestProperty("referer", "http://m.naver.com");
             return conn;
         });
-        setSize();
+        initSize();
     }
 
-    private void setSize() {
+    public void initSize() {
         String href;
         try {
             href = Jsoup.connect(listUrl +  titleId + info.getId()).get().getElementsByClass("viewList").first().selectFirst("tbody td.title")
                 .selectFirst("a").attr("href");
         }catch (IOException e){
+            LOGGER.warning("Size initialize failed. (url=" + listUrl +  titleId + info.getId() + ")");
             e.printStackTrace();
             size = 0;
             return;
@@ -103,10 +111,10 @@ public class NaverComicDownloader extends Downloader implements CookieSettable {
         try {
             document = c.get();
         } catch (IOException e) {
-            throw new ComicDownloadException(e);
+            throw new ComicDownloadException("Connection failed. (url=" + url + ", cookies=" + cookies + ")",e);
         }
         if(document.baseUri().contains(detailUrl)){
-            throw new ComicAccessException("Unable to access " + url);
+            throw new ComicAccessException("Access failed. (url=" + url + ", cookies="+cookies+")");
         }
 
         List<String> ret = new ArrayList<>();

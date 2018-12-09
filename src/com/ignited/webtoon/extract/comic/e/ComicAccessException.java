@@ -38,16 +38,6 @@ public class ComicAccessException extends ComicDownloadException {
     /**
      * Instantiates a new Comic access exception.
      *
-     * @param url    the url
-     * @param status the status
-     */
-    public ComicAccessException(String url, int status){
-        super("Unable to access " + url + ", status " + status);
-    }
-
-    /**
-     * Instantiates a new Comic access exception.
-     *
      * @param message the message
      * @param cause   the cause
      */

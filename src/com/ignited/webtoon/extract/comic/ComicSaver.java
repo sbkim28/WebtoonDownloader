@@ -2,13 +2,11 @@ package com.ignited.webtoon.extract.comic;
 
 import com.ignited.webtoon.extract.comic.e.ComicDownloadException;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * ComicSaver
@@ -18,6 +16,8 @@ import java.util.List;
  * @author Ignited
  */
 public class ComicSaver {
+
+    private static final Logger LOGGER = Logger.getLogger(ComicSaver.class.getName());
 
     /**
      * The constant DEFAULT_IMG_NAME.
@@ -90,43 +90,54 @@ public class ComicSaver {
         int index = 0;
         boolean ex = false;
         for(String s : src) {
+            StringBuilder builder = new StringBuilder().append(path).append("/").append(title).append("/");
+
+            while (builder.charAt(builder.length() - 2) == '.') {
+                builder.deleteCharAt(builder.length() - 2);
+            }
+
+            File file = new File(builder.toString());
+            boolean dir = false;
+            if (!file.exists()){
+                dir = file.mkdirs();
+            }
+            builder.append(name).append(++index);
+            URLConnection con;
             try {
-                //BufferedImage image = ImageIO.read(build(s));
-                StringBuilder builder = new StringBuilder().append(path).append("/").append(title).append("/");
+                con = build(s);
+            }catch (IOException e) {
+                e.printStackTrace();
+                LOGGER.warning("Connection build failed. (src=" + s + ", ubs=" + (ubs == null) + ")");
+                ex = true;
+                continue;
+            }
 
-                while (builder.charAt(builder.length() - 2) == '.') {
-                    builder.deleteCharAt(builder.length() - 2);
-                }
+            String type = con.getContentType();
+            if(type.contains("jpeg")){
+                builder.append(".jpg");
+            }else if(type.contains("gif")){
+                builder.append(".gif");
+            }else if(type.contains("png")){
+                builder.append(".png");
+            }else {
+                LOGGER.warning("Unsupported image format. (type=" + type+ ", src=" +s+ ")");
+                ex = true;
+            }
 
-                File file = new File(builder.toString());
-                if (!file.exists()) file.mkdirs();
-
-                builder.append(name).append(++index);
-                URLConnection con = build(s);
-                String type = con.getContentType();
-                if(type.contains("jpeg")){
-                    builder.append(".jpg");
-                }else if(type.contains("gif")){
-                    builder.append(".gif");
-                }else if(type.contains("png")){
-                    builder.append(".png");
-                }else {
-                    throw new IOException("Unsupported Image Format : " + type);
-                }
-
+            try {
                 BufferedInputStream bis = new BufferedInputStream(con.getInputStream());
                 BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(builder.toString()));
 
                 int len;
                 byte[] buf = new byte[1024];
-                while ((len = bis.read(buf)) != -1){
+                while ((len = bis.read(buf)) != -1) {
                     bos.write(buf, 0, len);
                     bos.flush();
                 }
-
             } catch (IOException e) {
                 e.printStackTrace();
                 ex = true;
+                LOGGER.warning("Reading and writing failed. (type=" + type + ", src= " + s + ", location=" + builder.toString() + ", createdir=" + dir + ")");
             }
         }
 

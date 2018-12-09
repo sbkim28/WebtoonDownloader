@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 /**
  * ListDonwloader
- *
+ * <p>
  * Dawnload Webtoons using list
  *
  * @author Ignited
@@ -34,7 +34,20 @@ public abstract class ListDownloader extends Downloader{
      * @throws ComicListInitException when it failed to get inital data.
      */
     public ListDownloader(ComicInfo info, String path) throws ComicListInitException {
-        this(info, path, DEFAULT_MAXTRY, DEFAULT_WAIT);
+        this(info, path, new ComicSaver(path) ,DEFAULT_MAXTRY, DEFAULT_WAIT);
+    }
+
+
+    /**
+     * Instantiates a new downloader.
+     *
+     * @param info the information about webtoon
+     * @param path the location where the webtoon will be saved.
+     * @param saver the comic saver
+     * @throws ComicListInitException when it failed to get inital data.
+     */
+    public ListDownloader(ComicInfo info, String path, ComicSaver saver) throws ComicListInitException {
+        this(info,path, saver, DEFAULT_MAXTRY, DEFAULT_WAIT);
     }
 
     /**
@@ -42,11 +55,12 @@ public abstract class ListDownloader extends Downloader{
      *
      * @param info   the information about webtoon
      * @param path   the location where the webtoon will be saved
+     * @param saver the comic saver
      * @param maxTry the max try to connect and get elements
      * @param wait   the wait time in millis after failure
      * @throws ComicListInitException when it failed to get inital data.
      */
-    public ListDownloader(ComicInfo info, String path, int maxTry, int wait) throws ComicListInitException {
+    public ListDownloader(ComicInfo info, String path, ComicSaver saver, int maxTry, int wait) throws ComicListInitException {
         super(info, path);
         int i = 1;
         while (true) {
@@ -55,23 +69,27 @@ public abstract class ListDownloader extends Downloader{
                 break;
             } catch (IOException e) {
                 LOGGER.warning(e.getClass().getName() + ":" + e.getMessage());
+                e.printStackTrace();
                 LOGGER.warning("Failed to init item list");
                 LOGGER.warning("Left attempt : " + (maxTry - i));
 
                 if(++i > maxTry){
-                    throw new ComicListInitException(e);
+                    throw new ComicListInitException("Exceeded max try. (maxtry=" + maxTry+")", e);
                 }
                 items = null;
                 try {
                     Thread.sleep(wait);
                 } catch (InterruptedException e1) {
-                    throw new ComicListInitException(e1);
+                    throw new ComicListInitException("Interrupted while waiting. (left=" + (maxTry - i + 1) + ")", e1);
                 }
             } catch (Exception e){
+                items = null;
                 throw new ComicListInitException(e);
             }
         }
     }
+
+
 
     /**
      * Init comic items.

@@ -72,16 +72,17 @@ public abstract class Cataloger {
                     break;
                 }catch (IOException e){
                     LOGGER.warning(e.getClass().getName() + ":" + e.getMessage());
+                    e.printStackTrace();
                     LOGGER.warning("Failed to catalog");
-                    LOGGER.warning("Left attempt : " + (maxTry - i));
+                    LOGGER.warning("Left attempt=" + (maxTry - i));
                     if(++i > maxTry){
-                        throw new ComicCatalogException(e);
+                        throw new ComicCatalogException("Exceeded max try. (maxtry=" + maxTry+")", e);
                     }
                     items = null;
                     try {
                         Thread.sleep(wait);
                     } catch (InterruptedException e1) {
-                        throw new ComicCatalogException(e1);
+                        throw new ComicCatalogException("Interrupted while waiting. (left=" + (maxTry - i + 1) + ")", e1);
                     }
                 }catch (Exception e){
                     items = null;

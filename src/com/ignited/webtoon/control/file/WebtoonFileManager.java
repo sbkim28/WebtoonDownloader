@@ -17,6 +17,7 @@ import com.ignited.webtoon.indexer.order.Order;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -74,8 +75,6 @@ public class WebtoonFileManager {
 
         d.setPath(path + "/" + type.toLowerCase() + "/" + name);
         download(d, size);
-
-
     }
 
     public void create(String name, int size) throws ComicException {
@@ -121,7 +120,7 @@ public class WebtoonFileManager {
                 status = 2;
             }
         }
-        FileIndexer indexer = new TextIndexer(path, Order.CREATED_ASCENDING);
+        FileIndexer indexer = new TextIndexer(d.getPath(), Order.CREATED_ASCENDING);
         try {
             indexer.setIndex();
         } catch (IOException e) {
@@ -139,6 +138,12 @@ public class WebtoonFileManager {
             }
         }
         throw new ComicNotFoundException("Cannot find comic : " + name);
+    }
+
+    public File findFile(String name){
+        File[] child = this.file.listFiles();
+        LOGGER.info(Arrays.toString(child));
+        return null;
     }
 
 }

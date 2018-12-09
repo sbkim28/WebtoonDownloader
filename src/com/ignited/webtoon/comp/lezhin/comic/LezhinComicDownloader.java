@@ -35,21 +35,11 @@ public class LezhinComicDownloader extends ListDownloader {
      * Instantiates a new Lezhin comic downloader.
      *
      * @param info the information about lezhin webtoon
-     * @throws ComicListInitException when it failed to get initial data.
-     */
-    public LezhinComicDownloader(ComicInfo info) throws ComicListInitException {
-        this(info, null);
-    }
-
-    /**
-     * Instantiates a new Lezhin comic downloader.
-     *
-     * @param info the information about lezhin webtoon
      * @param path the location where the webtoon will be saved.
      * @throws ComicListInitException when it failed to get initial data.
      */
     public LezhinComicDownloader(ComicInfo info, String path) throws ComicListInitException {
-        this(info, path, DEFAULT_MAXTRY, DEFAULT_WAIT);
+        super(info, path);
     }
 
     /**
@@ -57,17 +47,30 @@ public class LezhinComicDownloader extends ListDownloader {
      *
      * @param info the information about lezhin webtoon
      * @param path the location where the webtoon will be saved.
+     * @param saver the comic saver
+     * @throws ComicListInitException when it failed to get initial data.
+     */
+    public LezhinComicDownloader(ComicInfo info, String path, ComicSaver saver) throws ComicListInitException {
+        super(info, path, saver);
+    }
+
+    /**
+     * Instantiates a new Lezhin comic downloader.
+     *
+     * @param info the information about lezhin webtoon
+     * @param path the location where the webtoon will be saved.
+     * @param saver the comic saver
      * @param maxTry the max try to connect and get elements
      * @param wait   the wait time in millis after failure
      * @throws ComicListInitException when it failed to get initial data.
      */
-    public LezhinComicDownloader(ComicInfo info, String path, int maxTry, int wait) throws ComicListInitException {
-        super(info, path, maxTry, wait);
+    public LezhinComicDownloader(ComicInfo info, String path, ComicSaver saver, int maxTry, int wait) throws ComicListInitException {
+        super(info, path, saver, maxTry, wait);
     }
 
     @Override
     protected void initItems() throws IOException {
-        if(!"LEZHIN".equals(info.getType())) throw new IllegalArgumentException("Unmatching comic type");
+        if(!"LEZHIN".equals(info.getType())) throw new IllegalArgumentException("Unmatching comic type. (expected=LEZHIN, type=" + info.getType() + ")");
         items = new ArrayList<>();
         Document doc = Jsoup.connect(list_url + ((LezhinComicInfo) info).getAlias())
                 .get();
@@ -92,8 +95,8 @@ public class LezhinComicDownloader extends ListDownloader {
         List<String> ret = new ArrayList<>();
         int i = 1;
         while (true){
+            String u = String.format(image_url, info.getId(), items.get(index).getId(), i);
             try {
-                String u = String.format(image_url, info.getId(), items.get(index).getId(), i);
                 HttpURLConnection con = (HttpURLConnection) new URL(u).openConnection();
                 int res = con.getResponseCode();
                 if(res == 200) {
@@ -101,11 +104,11 @@ public class LezhinComicDownloader extends ListDownloader {
                 }else if(res == 404){
                     break;
                 }else {
-                    throw new ComicAccessException(u, res);
+                    throw new ComicAccessException("Access failed. (index=" + i + ", url=" + u + ", res=" + res + ")" );
                 }
                 ++i;
             } catch (IOException e) {
-                throw new ComicDownloadException(e);
+                throw new ComicDownloadException("Connection open failed. (index=" + i + ", url=" + u + ")",e);
             }
         }
 

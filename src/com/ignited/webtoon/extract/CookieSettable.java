@@ -1,4 +1,4 @@
-package com.ignited.webtoon.extract.comic;
+package com.ignited.webtoon.extract;
 
 import java.util.Map;
 
