@@ -12,8 +12,10 @@ import com.ignited.webtoon.extract.comic.e.ComicException;
 import com.ignited.webtoon.extract.comic.e.ComicNotFoundException;
 import com.ignited.webtoon.indexer.FileIndexer;
 import com.ignited.webtoon.indexer.TextIndexer;
+import com.ignited.webtoon.indexer.order.Order;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -64,42 +66,70 @@ public class WebtoonFileManager {
     public void create(String name) throws ComicException{
         ComicInfo info = findOne(name);
         String type = info.getType();
-        LOGGER.info("Type : "+ type);
-        ComicFactory cf = ComicTypeFactory.valueOf(info.getType());
+        ComicFactory cf = ComicTypeFactory.valueOf(type);
 
         Downloader d = cf.downloader(info);
 
         int size = d.size();
-        LOGGER.info("Size : "+ size);
 
-        String p = path + "/" + type.toLowerCase() + "/" + name;
-        d.setPath(p);
-        LOGGER.info(p);
+        d.setPath(path + "/" + type.toLowerCase() + "/" + name);
+        download(d, size);
 
-        download(d);
+
     }
 
     public void create(String name, int size) throws ComicException {
         ComicInfo info = findOne(name);
+        String type = info.getType();
+        Downloader d= ComicTypeFactory.valueOf(type).downloader(info);
+
+        int s = d.size();
+        s = Math.min(size, s);
+        d.setPath(path + "/" + type.toLowerCase() + "/" + name);
+        download(d, s);
     }
 
     public void create(String name, int size, String path) throws ComicException {
+        ComicInfo info = findOne(name);
+        String type = info.getType();
+        Downloader d= ComicTypeFactory.valueOf(type).downloader(info);
 
+        int s = d.size();
+        s = Math.min(size, s);
+        d.setPath(this.path + "/" + path);
+        download(d, s);
     }
 
-    public void create(String name, int size, String path, ComicFindStrategy cfs){
+    public void create(String name, int size, String path, ComicFindStrategy cfs) throws ComicException {
+        ComicInfo info = cfs.find(webtoons);
+        String type = info.getType();
+        Downloader d= ComicTypeFactory.valueOf(type).downloader(info);
 
+        int s = d.size();
+        s = Math.min(size, s);
+        d.setPath(this.path + "/" + path);
+        download(d, s);
     }
 
-    private void download(Downloader d){
-        int size = d.size();
+    private void download(Downloader d, int size) throws ComicDownloadException {
+        int status = 1;
         for (int i = 0; i<size; ++i){
             try {
                 d.download(i);
             }catch (ComicDownloadException e){
                 e.printStackTrace();
+                status = 2;
             }
         }
+        FileIndexer indexer = new TextIndexer(path, Order.CREATED_ASCENDING);
+        try {
+            indexer.setIndex();
+        } catch (IOException e) {
+            e.printStackTrace();
+            status *= 3;
+        }
+
+        if(status != 1) throw new ComicDownloadException("err" + status);
     }
 
     public ComicInfo findOne(String name) throws ComicNotFoundException {
@@ -109,10 +139,6 @@ public class WebtoonFileManager {
             }
         }
         throw new ComicNotFoundException("Cannot find comic : " + name);
-    }
-
-    public ComicInfo find(ComicFindStrategy fs) throws ComicNotFoundException{
-        return fs.find(webtoons);
     }
 
 }

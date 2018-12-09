@@ -6,14 +6,18 @@ import com.google.gson.JsonParser;
 import com.ignited.webtoon.extract.comic.ComicInfo;
 import com.ignited.webtoon.extract.comic.ComicSaver;
 import com.ignited.webtoon.extract.comic.ListDownloader;
+import com.ignited.webtoon.extract.comic.e.ComicAccessException;
 import com.ignited.webtoon.extract.comic.e.ComicDownloadException;
 import com.ignited.webtoon.extract.comic.e.ComicListInitException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * LezhinComicDownloader
@@ -23,8 +27,9 @@ import java.util.Comparator;
  */
 public class LezhinComicDownloader extends ListDownloader {
 
-    private final String list_url = "https://www.lezhin.com/ko/comic/";
+    private static final String list_url = "https://www.lezhin.com/ko/comic/";
 
+    private static final String image_url = "https://cdn.lezhin.com/v2/comics/%s/episodes/%s/contents/scrolls/%d";
 
     /**
      * Instantiates a new Lezhin comic downloader.
@@ -58,7 +63,6 @@ public class LezhinComicDownloader extends ListDownloader {
      */
     public LezhinComicDownloader(ComicInfo info, String path, int maxTry, int wait) throws ComicListInitException {
         super(info, path, maxTry, wait);
-        this.loader = new LezhinComicImageLoader();
     }
 
     @Override
@@ -84,11 +88,28 @@ public class LezhinComicDownloader extends ListDownloader {
     }
 
     @Override
-    public void download(int index) throws ComicDownloadException {
-        ((LezhinComicImageLoader) loader).setComicId(info.getId());
-        ((LezhinComicImageLoader) loader).setEpisodeId(items.get(index).getId());
+    protected List<String> getImages(int index) throws ComicDownloadException {
+        List<String> ret = new ArrayList<>();
+        int i = 1;
+        while (true){
+            try {
+                String u = String.format(image_url, info.getId(), items.get(index).getId(), i);
+                HttpURLConnection con = (HttpURLConnection) new URL(u).openConnection();
+                int res = con.getResponseCode();
+                if(res == 200) {
+                    ret.add(u);
+                }else if(res == 404){
+                    break;
+                }else {
+                    throw new ComicAccessException(u, res);
+                }
+                ++i;
+            } catch (IOException e) {
+                throw new ComicDownloadException(e);
+            }
+        }
 
-        super.download(index);
+        return ret;
     }
 
     /**

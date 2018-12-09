@@ -3,9 +3,7 @@ package com.ignited.webtoon.comp.kakao.comp;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.ignited.webtoon.comp.naver.comic.NaverComicImageLoader;
 import com.ignited.webtoon.extract.comic.ComicInfo;
-import com.ignited.webtoon.extract.comic.ComicSaver;
 import com.ignited.webtoon.extract.comic.ListDownloader;
 import com.ignited.webtoon.extract.comic.e.ComicDownloadException;
 import com.ignited.webtoon.extract.comic.e.ComicListInitException;
@@ -14,6 +12,7 @@ import org.jsoup.Jsoup;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The Kakao comic downloader.
@@ -59,7 +58,6 @@ public class KakaoComicDownloader extends ListDownloader {
      */
     public KakaoComicDownloader(ComicInfo info, String path, int maxTry, int wait) throws ComicListInitException {
         super(info, path, maxTry, wait);
-        this.loader = new KakaoComicImageLoader();
     }
 
     @Override
@@ -86,7 +84,8 @@ public class KakaoComicDownloader extends ListDownloader {
     }
 
     @Override
-    public void download(int index) throws ComicDownloadException {
+    protected List<String> getImages(int index) throws ComicDownloadException {
+
         JsonObject obj;
         try {
             String s = Jsoup.connect(view)
@@ -98,7 +97,16 @@ public class KakaoComicDownloader extends ListDownloader {
         } catch (IOException e) {
             throw new ComicDownloadException(e);
         }
-        ((KakaoComicImageLoader) loader).setSource(obj);
-        super.download(index);
+
+        List<String> ret = new ArrayList<>();
+        JsonObject data = obj.get("downloadData").getAsJsonObject().get("members").getAsJsonObject();
+        String drmURL = data.get("sAtsServerUrl").getAsString();
+        JsonArray files = data.get("files").getAsJsonArray();
+
+        for(int i = 0; i<files.size(); ++i){
+            ret.add(drmURL + files.get(i).getAsJsonObject().get("secureUrl").getAsString());
+        }
+
+        return ret;
     }
 }

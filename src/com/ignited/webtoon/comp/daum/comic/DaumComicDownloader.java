@@ -65,7 +65,6 @@ public class DaumComicDownloader extends ListDownloader {
      */
     public DaumComicDownloader(ComicInfo info, String path, int maxTry, int wait) throws ComicListInitException {
         super(info, path, maxTry, wait);
-        this.loader = new DaumComicImageLoader(null);
     }
 
     @Override
@@ -86,8 +85,9 @@ public class DaumComicDownloader extends ListDownloader {
 
     }
 
+
     @Override
-    public void download(int index) throws ComicDownloadException {
+    protected List<String> getImages(int index) throws ComicDownloadException {
         String url = viewUrl + items.get(index).getId();
         JsonObject obj;
         try {
@@ -99,9 +99,12 @@ public class DaumComicDownloader extends ListDownloader {
         if(!status.equals("200")){
             throw new ComicAccessException(url, status);
         }
-        ((DaumComicImageLoader) loader).setSource(obj);
-        super.download(index);
+
+        List<String> ret = new ArrayList<>();
+        JsonArray array = obj.get("data").getAsJsonArray();
+        for(int i = 0;i<array.size();++i){
+            ret.add(array.get(i).getAsJsonObject().get("url").getAsString());
+        }
+        return ret;
     }
-
-
 }

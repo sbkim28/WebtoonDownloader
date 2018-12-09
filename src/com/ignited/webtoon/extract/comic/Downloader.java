@@ -26,10 +26,6 @@ public abstract class Downloader {
      */
     protected String path;
     /**
-     * The ImageLoader
-     */
-    protected ImageLoader loader;
-    /**
      * The ComicSaver
      */
     protected ComicSaver saver;
@@ -54,7 +50,7 @@ public abstract class Downloader {
      */
     public void download(int index) throws ComicDownloadException {
         if(path == null) throw new IllegalStateException("Undefined path");
-        List<String> srcs = loader.load();
+        List<String> srcs = getImages(index);
         saver.save(srcs, Compatamizer.factor(getTitle(index)));
 
     }
@@ -85,4 +81,6 @@ public abstract class Downloader {
      * @return the number of the chapter.
      */
     public abstract int size();
+
+    protected abstract List<String> getImages(int index) throws ComicDownloadException;
 }
