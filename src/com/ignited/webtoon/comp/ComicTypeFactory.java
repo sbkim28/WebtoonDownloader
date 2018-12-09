@@ -15,7 +15,7 @@ import com.ignited.webtoon.extract.comic.e.ComicListInitException;
 /**
  * ComicTypeFactory
  *
- * Comic Factory creating Cataloger and Downloader of Naver, Daum, and Lezhin webtoon
+ * Comic Factory creating Cataloger and Downloader of Naver, Daum, Lezhin and Kakao webtoon
  *
  * @author Ignited
  * @see com.ignited.webtoon.extract.comic.ComicFactory

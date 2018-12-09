@@ -1,4 +1,4 @@
-package com.ignited.webtoon.extract;
+package com.ignited.webtoon.control;
 
 import com.ignited.webtoon.extract.comic.*;
 import com.ignited.webtoon.extract.comic.e.ComicException;
@@ -9,13 +9,13 @@ import com.ignited.webtoon.indexer.TextIndexer;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 /**
  * ComicWriteManager
  * Class dealing with downloading webtoons
- *
  *
  * @author Ignited
  */
@@ -115,4 +115,6 @@ public class ComicWriteManager {
         }
         return containsKeywords.get(0);
     }
+
+
 }

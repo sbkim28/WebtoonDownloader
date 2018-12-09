@@ -43,6 +43,7 @@ public abstract class Downloader {
     public Downloader(ComicInfo info, String path) {
         this.info = info;
         this.path = path;
+        this.saver = new ComicSaver(path);
     }
 
     /**

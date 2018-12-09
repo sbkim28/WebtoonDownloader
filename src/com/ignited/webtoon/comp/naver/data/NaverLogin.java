@@ -2,12 +2,10 @@ package com.ignited.webtoon.comp.naver.data;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.ignited.webtoon.extract.Login;
-import com.ignited.webtoon.extract.LoginFailException;
-import com.ignited.webtoon.extract.WrongCaptchaException;
-import com.ignited.webtoon.extract.WrongIdPasswordException;
+import com.ignited.webtoon.control.login.Login;
+import com.ignited.webtoon.control.login.LoginFailException;
+import com.ignited.webtoon.control.login.WrongCaptchaException;
+import com.ignited.webtoon.control.login.WrongIdPasswordException;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

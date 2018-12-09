@@ -58,7 +58,6 @@ public class LezhinComicDownloader extends ListDownloader {
      */
     public LezhinComicDownloader(ComicInfo info, String path, int maxTry, int wait) throws ComicListInitException {
         super(info, path, maxTry, wait);
-        this.saver = new ComicSaver(path);
         this.loader = new LezhinComicImageLoader();
     }
 

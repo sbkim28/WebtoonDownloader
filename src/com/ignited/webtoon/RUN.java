@@ -1,7 +1,7 @@
 package com.ignited.webtoon;
 
 import com.ignited.webtoon.comp.ComicTypeFactory;
-import com.ignited.webtoon.extract.ComicWriteManager;
+import com.ignited.webtoon.control.ComicWriteManager;
 import com.ignited.webtoon.extract.comic.e.ComicException;
 import com.ignited.webtoon.view.HTMLViewer;
 

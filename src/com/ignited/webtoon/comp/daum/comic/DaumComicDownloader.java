@@ -65,7 +65,6 @@ public class DaumComicDownloader extends ListDownloader {
      */
     public DaumComicDownloader(ComicInfo info, String path, int maxTry, int wait) throws ComicListInitException {
         super(info, path, maxTry, wait);
-        this.saver = new ComicSaver(path);
         this.loader = new DaumComicImageLoader(null);
     }
 

@@ -59,7 +59,6 @@ public class KakaoComicDownloader extends ListDownloader {
      */
     public KakaoComicDownloader(ComicInfo info, String path, int maxTry, int wait) throws ComicListInitException {
         super(info, path, maxTry, wait);
-        this.saver = new ComicSaver(path);
         this.loader = new KakaoComicImageLoader();
     }
 

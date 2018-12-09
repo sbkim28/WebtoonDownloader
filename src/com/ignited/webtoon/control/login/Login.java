@@ -1,4 +1,4 @@
-package com.ignited.webtoon.extract;
+package com.ignited.webtoon.control.login;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.Gson;

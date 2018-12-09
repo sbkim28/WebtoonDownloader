@@ -1,4 +1,4 @@
-package com.ignited.webtoon.extract;
+package com.ignited.webtoon.control.login;
 
 public class WrongCaptchaException extends LoginFailException{
 

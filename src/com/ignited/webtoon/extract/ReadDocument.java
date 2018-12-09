@@ -1,5 +1,6 @@
 package com.ignited.webtoon.extract;
 
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -46,8 +47,11 @@ public class ReadDocument {
     }
 
     public void read(String url) throws IOException {
-        doc = Jsoup.connect(url)
-                .cookies(cookies).get();
+        Connection c = Jsoup.connect(url);
+        if(cookies != null){
+            c = c.cookies(cookies);
+        }
+        doc = c.get();
     }
 
     /**

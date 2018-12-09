@@ -27,6 +27,7 @@ public class ComicSaver {
     private String path;
     private String name;
 
+    private ConnectionBuildStrategy ubs;
 
 
     /**
@@ -66,6 +67,16 @@ public class ComicSaver {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+
+    /**
+     * Sets ubs.
+     *
+     * @param ubs the URL Build Strategy
+     */
+    public void setUbs(ConnectionBuildStrategy ubs) {
+        this.ubs = ubs;
     }
 
     /**
@@ -129,8 +140,16 @@ public class ComicSaver {
      * @return the url connection
      * @throws IOException when it failed to open connection
      */
-    protected URLConnection build(String url) throws IOException {
-        return new URL(url).openConnection();
+    private URLConnection build(String url) throws IOException {
+        if(ubs == null) {
+            return new URL(url).openConnection();
+        }else {
+            return ubs.build(url);
+        }
     }
 
+
+    public interface ConnectionBuildStrategy {
+        URLConnection build(String url) throws IOException;
+    }
 }

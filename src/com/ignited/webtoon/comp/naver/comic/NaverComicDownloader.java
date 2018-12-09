@@ -9,6 +9,8 @@ import com.ignited.webtoon.extract.comic.e.ComicDownloadException;
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Map;
 
 /**
@@ -50,7 +52,11 @@ public class NaverComicDownloader extends Downloader implements CookieSettable {
     public NaverComicDownloader(ComicInfo info, String path){
         super(info, path);
         if(!"NAVER".equals(info.getType())) throw new IllegalArgumentException("Unmatching comic type");
-        this.saver = new NaverComicSaver(path);
+        saver.setUbs(url -> {
+            URLConnection conn = new URL(url).openConnection();
+            conn.setRequestProperty("referer", "http://m.naver.com");
+            return conn;
+        });
         this.loader = new NaverComicImageLoader();
         doc = new ReadDocument();
         setSize();
