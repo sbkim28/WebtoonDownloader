@@ -2,9 +2,6 @@ package com.ignited.webtoon.extract.comic;
 
 
 import com.ignited.webtoon.extract.comic.e.ComicDownloadException;
-import com.ignited.webtoon.util.Compatamizer;
-
-import java.io.IOException;
 import java.util.List;
 
 
@@ -39,7 +36,8 @@ public abstract class Downloader {
     public Downloader(ComicInfo info, String path) {
         this.info = info;
         this.path = path;
-        this.saver = new ComicSaver(path);
+        this.saver = new ComicSaver();
+        saver.setPath(path);
     }
 
     public Downloader(ComicInfo info, String path, ComicSaver saver) {
@@ -58,7 +56,7 @@ public abstract class Downloader {
     public void download(int index) throws ComicDownloadException {
         if(path == null) throw new IllegalStateException("Undefined path");
         List<String> srcs = getImages(index);
-        saver.save(srcs, Compatamizer.factor(getTitle(index)));
+        saver.save(srcs, getTitle(index));
 
     }
 

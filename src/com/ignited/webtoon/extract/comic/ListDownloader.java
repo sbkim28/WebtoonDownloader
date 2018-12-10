@@ -34,7 +34,7 @@ public abstract class ListDownloader extends Downloader{
      * @throws ComicListInitException when it failed to get inital data.
      */
     public ListDownloader(ComicInfo info, String path) throws ComicListInitException {
-        this(info, path, new ComicSaver(path) ,DEFAULT_MAXTRY, DEFAULT_WAIT);
+        this(info, path, new ComicSaver() ,DEFAULT_MAXTRY, DEFAULT_WAIT);
     }
 
 
@@ -61,7 +61,7 @@ public abstract class ListDownloader extends Downloader{
      * @throws ComicListInitException when it failed to get inital data.
      */
     public ListDownloader(ComicInfo info, String path, ComicSaver saver, int maxTry, int wait) throws ComicListInitException {
-        super(info, path);
+        super(info, path, saver);
         int i = 1;
         while (true) {
             try {

@@ -3,6 +3,8 @@ package com.ignited.webtoon.indexer;
 import org.mozilla.universalchardet.UniversalDetector;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -45,17 +47,17 @@ public class TextIndexedLoader implements FileLoader {
 
     @Override
     public File[] read() throws IOException {
-        List<File> files = new LinkedList<>();
+        List<File> files = new ArrayList<>();
         File index = new File(root.getPath() + "/index.txt");
-        if(!index.exists()) throw new FileNotFoundException();
+        if(!index.exists()) throw new FileNotFoundException("Finding index file failed. (location=" + index.getPath() + ")");
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(index), getEncoding(index)));
         String line;
 
         while ((line = reader.readLine()) != null) {
+            line = line.replace("\uFEFF", "");
             File file = new File(root.getPath() + "/" + line);
-            if (!file.exists()) throw new FileNotFoundException();
-
+            if (!file.exists()) throw new FileNotFoundException("Finding sub file failed. (sub=" + file.getPath() + ")");
             files.add(file);
         }
 

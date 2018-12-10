@@ -8,7 +8,7 @@ package com.ignited.webtoon.translator;
  *
  * @author Ignited
  */
-public interface Translator extends Runnable{
+public interface Translator{
 
     /**
      * Translate string.

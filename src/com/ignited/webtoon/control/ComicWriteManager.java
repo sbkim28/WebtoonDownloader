@@ -1,5 +1,6 @@
 package com.ignited.webtoon.control;
 
+import com.ignited.webtoon.extract.CookieSettable;
 import com.ignited.webtoon.extract.comic.*;
 import com.ignited.webtoon.extract.comic.e.ComicException;
 import com.ignited.webtoon.extract.comic.e.ComicNotFoundException;

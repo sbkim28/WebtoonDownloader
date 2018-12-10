@@ -2,7 +2,7 @@ package com.ignited.webtoon.view;
 
 import com.ignited.webtoon.indexer.FileLoader;
 import com.ignited.webtoon.indexer.TextIndexedLoader;
-import com.ignited.webtoon.translator.HTMLTranslator;
+import com.ignited.webtoon.translator.HTMLFileTranslator;
 
 import java.awt.Desktop;
 import java.io.*;
@@ -84,11 +84,11 @@ public class HTMLViewer {
     public void view(int index) throws IOException {
         File _tmp = File.createTempFile("temp_", ".html", workingDir.getCanonicalFile());
         _tmp.deleteOnExit();
-        HTMLTranslator translator= new HTMLTranslator(collector.collect(index), _tmp, collector.getName(index));
+        HTMLFileTranslator translator= new HTMLFileTranslator(collector.collect(index), _tmp, collector.getName(index));
 
         if(color != null) translator.setBackground(color);
 
-        translator.run();
+        translator.write();
         Desktop.getDesktop().browse(_tmp.toURI());
     }
 
@@ -103,11 +103,11 @@ public class HTMLViewer {
         _tmp.deleteOnExit();
         File[] imgs = collector.collect(filename);
         if(imgs == null) throw new FileNotFoundException("Cannot Find File");
-        HTMLTranslator translator= new HTMLTranslator(imgs, _tmp.getCanonicalFile(), filename);
+        HTMLFileTranslator translator= new HTMLFileTranslator(imgs, _tmp.getCanonicalFile(), filename);
 
         if(color != null) translator.setBackground(color);
 
-        translator.run();
+        translator.write();
         Desktop.getDesktop().browse(_tmp.toURI());
     }
 }

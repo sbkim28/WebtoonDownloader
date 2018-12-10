@@ -1,46 +1,39 @@
 package com.ignited.webtoon.translator;
 
-
 import com.ignited.webtoon.util.Compatamizer;
 
 import java.io.*;
 
+
 /**
  * HTMLTranslator
  *
- * Translate Image Files into HTML Files
+ * Translate Image Files to an Easily Accessible File
  * @author Ignited
- * @see com.ignited.webtoon.translator.FileTranslator
+ * @see com.ignited.webtoon.translator.Translator
  */
-public class HTMLTranslator extends FileTranslator implements Runnable {
+public abstract class HTMLTranslator implements Translator{
 
-    private String title;
-    private String background;
 
     /**
-     * Instantiates a new Html translator.
+     * The directory translated Files will be located at.
+     */
+    protected File writeOn;
+
+    protected String title;
+    protected String background;
+
+    /**
+     * Instantiates a new File translator.
      *
-     * @param files      the image files
-     * @param writeOn    the directory translated file will be located at
+     * @param writeOn the directory translated files will be located at
      * @param title      the html title
      * @param background the html background
      */
-    public HTMLTranslator(File[] files, File writeOn, String title, String background) {
-        super(files, writeOn);
+    public HTMLTranslator(File writeOn, String title, String background) {
+        this.writeOn = writeOn;
         this.title = title;
         this.background = background;
-    }
-
-    /**
-     * Instantiates a new Html translator.
-     * Background will be black
-     *
-     * @param files   the image files
-     * @param writeOn the directory translated file will be located at
-     * @param title   the html title
-     */
-    public HTMLTranslator(File[] files, File writeOn, String title) {
-        this(files,writeOn,title,"000000");
     }
 
     /**
@@ -60,13 +53,29 @@ public class HTMLTranslator extends FileTranslator implements Runnable {
                 .append("</title><style>.layer{position:absolute;left:50%;\ntransform:translate(-50%, 0%)}</style></head><body style=\"margin: 0px; background: #")
                 .append(background)
                 .append(";\"><div class=\"layer\">");
-        for (File file : files){
-            htmlBuilder.append("<img ; src=\"")
-                    .append(Compatamizer.toHTML(file.getPath()))
-                    .append("\" >");
-        }
+        appendImage(htmlBuilder);
         htmlBuilder.append("</div></body></html>");
         return htmlBuilder.toString();
     }
 
+    protected abstract void appendImage(StringBuilder htmlBuilder);
+
+    /**
+     * Write.
+     *
+     * @throws IOException the io exception
+     */
+    public void write() throws IOException {
+        File file = writeOn;
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+        if (file.isDirectory()) {
+            throw new IllegalArgumentException("File exists but Directory");
+        }
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
+        writer.write(translate());
+        writer.close();
+
+    }
 }

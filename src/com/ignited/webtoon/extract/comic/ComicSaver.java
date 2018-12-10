@@ -1,6 +1,7 @@
 package com.ignited.webtoon.extract.comic;
 
 import com.ignited.webtoon.extract.comic.e.ComicDownloadException;
+import com.ignited.webtoon.util.Compatamizer;
 
 import java.io.*;
 import java.net.URL;
@@ -10,7 +11,7 @@ import java.util.logging.Logger;
 
 /**
  * ComicSaver
- *
+ * <p>
  * Save Webtoons
  *
  * @author Ignited
@@ -33,11 +34,9 @@ public class ComicSaver {
     /**
      * Instantiates a new Comic saver.
      * as Default Image Name
-     *
-     * @param path the location where the webtoon will be saved
      */
-    public ComicSaver(String path) {
-        this(path, DEFAULT_IMG_NAME);
+    public ComicSaver() {
+        this(null, DEFAULT_IMG_NAME);
     }
 
     /**
@@ -61,6 +60,15 @@ public class ComicSaver {
     }
 
     /**
+     * Gets path.
+     *
+     * @return the location where naver webtoon will be saved
+     */
+    public String getPath() {
+        return path;
+    }
+
+    /**
      * Sets name.
      *
      * @param name the specific image name
@@ -79,6 +87,16 @@ public class ComicSaver {
         this.ubs = ubs;
     }
 
+
+    /**
+     * Gets ubs.
+     *
+     * @return the URL Build Strategy
+     */
+    public ConnectionBuildStrategy getUbs() {
+        return ubs;
+    }
+
     /**
      * Save a chapter of the webtoon.
      *
@@ -90,7 +108,7 @@ public class ComicSaver {
         int index = 0;
         boolean ex = false;
         for(String s : src) {
-            StringBuilder builder = new StringBuilder().append(path).append("/").append(title).append("/");
+            StringBuilder builder = new StringBuilder().append(path).append("/").append(Compatamizer.factor(title)).append("/");
 
             while (builder.charAt(builder.length() - 2) == '.') {
                 builder.deleteCharAt(builder.length() - 2);
@@ -122,6 +140,7 @@ public class ComicSaver {
             }else {
                 LOGGER.warning("Unsupported image format. (type=" + type+ ", src=" +s+ ")");
                 ex = true;
+                continue;
             }
 
             try {
@@ -151,7 +170,7 @@ public class ComicSaver {
      * @return the url connection
      * @throws IOException when it failed to open connection
      */
-    private URLConnection build(String url) throws IOException {
+    protected URLConnection build(String url) throws IOException {
         if(ubs == null) {
             return new URL(url).openConnection();
         }else {

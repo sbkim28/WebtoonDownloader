@@ -26,6 +26,7 @@ public class Compatamizer {
                 .replace(":", "")
                 .replace("\\", "")
                 .replace("*", "")
+                .replace("/", "")
                 .replace("\"", "")
                 .replace("<", "")
                 .replace(">", "").trim();

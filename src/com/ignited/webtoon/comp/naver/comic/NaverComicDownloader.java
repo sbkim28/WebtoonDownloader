@@ -3,7 +3,6 @@ package com.ignited.webtoon.comp.naver.comic;
 import com.ignited.webtoon.extract.*;
 import com.ignited.webtoon.extract.comic.ComicInfo;
 import com.ignited.webtoon.extract.comic.ComicSaver;
-import com.ignited.webtoon.extract.comic.CookieSettable;
 import com.ignited.webtoon.extract.comic.Downloader;
 import com.ignited.webtoon.extract.comic.e.ComicAccessException;
 import com.ignited.webtoon.extract.comic.e.ComicDownloadException;
@@ -50,7 +49,7 @@ public class NaverComicDownloader extends Downloader implements CookieSettable {
      * @param path the location where the webtoon will be saved
      */
     public NaverComicDownloader(ComicInfo info, String path){
-        this(info, path, new ComicSaver(path));
+        this(info, path, new ComicSaver());
 
     }
 
@@ -113,7 +112,8 @@ public class NaverComicDownloader extends Downloader implements CookieSettable {
         } catch (IOException e) {
             throw new ComicDownloadException("Connection failed. (url=" + url + ", cookies=" + cookies + ")",e);
         }
-        if(document.baseUri().contains(detailUrl)){
+        if(!document.baseUri().contains(detailUrl)){
+            LOGGER.info(document.baseUri());
             throw new ComicAccessException("Access failed. (url=" + url + ", cookies="+cookies+")");
         }
 
