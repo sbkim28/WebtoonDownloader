@@ -49,8 +49,8 @@ public abstract class HTMLTranslator implements Translator{
     public String translate() {
         StringBuilder htmlBuilder = new StringBuilder();
         htmlBuilder.append("<html><head><meta charset=\"UTF-8\"><title>")
-                .append(Compatamizer.toHTML(title))
-                .append("</title><style>.layer{position:absolute;left:50%;\ntransform:translate(-50%, 0%)}</style></head><body style=\"margin: 0px; background: #")
+                .append(Compatamizer.toHTML(title)) // position:absolute;left:50%; transform:translate(-50%, 0%)
+                .append("</title><style>.layer{margin: auto;\nwidth: 50%;}</style></head><body style=\"margin: 0px; background: #")
                 .append(background)
                 .append(";\"><div class=\"layer\">");
         appendImage(htmlBuilder);

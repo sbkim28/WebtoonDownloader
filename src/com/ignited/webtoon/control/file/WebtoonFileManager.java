@@ -109,7 +109,6 @@ public class WebtoonFileManager {
     }
 
     public void reform(File file, String name) throws IOException {
-        LOGGER.info(name);
         FileLoader fl = new TextIndexedLoader(file);
         File[] fs = fl.read();
 

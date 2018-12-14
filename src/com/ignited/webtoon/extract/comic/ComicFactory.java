@@ -17,9 +17,6 @@ public interface ComicFactory {
      * @param info the information about the webtoon
      * @return the downloader
      */
-    Downloader downloader(ComicInfo info) throws ComicListInitException;
-
-
     Downloader downloader(ComicInfo info, String path) throws ComicListInitException;
 
     Downloader downloader(ComicInfo info, String path, ComicSaver saver) throws ComicListInitException;

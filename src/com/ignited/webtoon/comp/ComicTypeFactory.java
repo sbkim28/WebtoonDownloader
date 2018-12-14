@@ -26,12 +26,6 @@ public enum ComicTypeFactory implements ComicFactory {
      * The NaverComic
      */
     NAVER{
-
-        @Override
-        public Downloader downloader(ComicInfo info) {
-            return new NaverComicDownloader(info, null);
-        }
-
         @Override
         public Downloader downloader(ComicInfo info, String path) {
             return new NaverComicDownloader(info, path);
@@ -53,10 +47,6 @@ public enum ComicTypeFactory implements ComicFactory {
      * The DaumComic
      */
     DAUM{
-        @Override
-        public Downloader downloader(ComicInfo info) throws ComicListInitException {
-            return new DaumComicDownloader(info, null);
-        }
 
         @Override
         public Downloader downloader(ComicInfo info, String path) throws ComicListInitException {
@@ -80,11 +70,6 @@ public enum ComicTypeFactory implements ComicFactory {
     LEZHIN {
 
         @Override
-        public Downloader downloader(ComicInfo info) throws ComicListInitException {
-            return new LezhinComicDownloader(info, null);
-        }
-
-        @Override
         public Downloader downloader(ComicInfo info, String path) throws ComicListInitException {
             return new LezhinComicDownloader(info, path);
         }
@@ -101,10 +86,6 @@ public enum ComicTypeFactory implements ComicFactory {
     },
 
     KAKAO{
-        @Override
-        public Downloader downloader(ComicInfo info) throws ComicListInitException {
-            return new KakaoComicDownloader(info,null);
-        }
 
         @Override
         public Downloader downloader(ComicInfo info, String path) throws ComicListInitException {
