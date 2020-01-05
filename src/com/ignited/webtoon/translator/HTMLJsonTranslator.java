@@ -1,14 +1,13 @@
 package com.ignited.webtoon.translator;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.io.File;
 import java.io.IOException;
 
 public class HTMLJsonTranslator extends HTMLTranslator {
 
-    private JsonObject object;
+    private JsonNode object;
 
     /**
      * Instantiates a new HTML Json translator.
@@ -17,8 +16,8 @@ public class HTMLJsonTranslator extends HTMLTranslator {
      * @param writeOn    the directory translated files will be located at
      * @param background the html background
      */
-    public HTMLJsonTranslator(JsonObject object, File writeOn, String background) {
-        super(writeOn, object.get("title").getAsString(), background);
+    public HTMLJsonTranslator(JsonNode object, File writeOn, String background) {
+        super(writeOn, object.get("title").asText(), background);
         this.object = object;
     }
 
@@ -29,7 +28,7 @@ public class HTMLJsonTranslator extends HTMLTranslator {
      * @param object     the comic json object.
      * @param writeOn the directory translated file will be located at
      */
-    public HTMLJsonTranslator(JsonObject object, File writeOn) {
+    public HTMLJsonTranslator(JsonNode object, File writeOn) {
         this(object, writeOn,"000000");
     }
 
@@ -41,14 +40,13 @@ public class HTMLJsonTranslator extends HTMLTranslator {
     @Override
     protected void appendImage(StringBuilder htmlBuilder) {
 
-        JsonArray ja = object.get("imgs").getAsJsonArray();
+        JsonNode arr = object.get("imgs");
 
-        for (int i = 0; i<ja.size(); ++i){
-            JsonObject jo = ja.get(i).getAsJsonObject();
+        for (JsonNode node : arr){
             htmlBuilder.append("<img ; src=\"data:")
-                    .append(jo.get("type").getAsString())
+                    .append(node.get("type").asText())
                     .append(";base64, ")
-                    .append(jo.get("data").getAsString())
+                    .append(node.get("data").asText())
                     .append("\" >");
         }
     }

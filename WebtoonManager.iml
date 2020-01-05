@@ -8,6 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="gson-2.8.2" level="project" />
-    <orderEntry type="library" name="gson-2.8.21" level="application" />
+    <orderEntry type="library" name="webtoon" level="application" />
   </component>
 </module>

@@ -1,10 +1,12 @@
 package com.ignited.webtoon.extract.comic;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.stream.JsonWriter;
+import com.fasterxml.jackson.core.JsonEncoding;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.ignited.webtoon.extract.comic.e.ComicDownloadException;
+import com.ignited.webtoon.util.ObjectMapperConfiguration;
 
 import java.io.*;
 import java.net.URLConnection;
@@ -16,25 +18,25 @@ public class ComicJsonSaver extends ComicSaver {
 
     private static final Logger LOGGER = Logger.getLogger(ComicJsonSaver.class.getName());
 
-    private JsonObject object;
-    private JsonArray webtoons;
+    private ObjectNode object;
+    private ArrayNode webtoons;
 
 
 
     public ComicJsonSaver(ComicInfo info) {
         super();
-        object = new JsonObject();
-        webtoons = new JsonArray();
-        object.add("webtoons", webtoons);
-        object.addProperty("title", info.getTitle());
-        object.addProperty("type", info.getType());
-        object.addProperty("id", info.getId());
+        ObjectMapper mapper = ObjectMapperConfiguration.getMapper();
+        object = mapper.createObjectNode();
+        webtoons = object.putArray("webtoons");
+        object.put("title", info.getTitle());
+        object.put("type", info.getType());
+        object.put("id", info.getId());
     }
 
-    public ComicJsonSaver(JsonObject object) {
+    public ComicJsonSaver(ObjectNode object) {
         super();
         this.object = object;
-        this.webtoons = object.get("webtoons").getAsJsonArray();
+        this.webtoons = (ArrayNode) object.get("webtoons");
     }
 
     @Override
@@ -42,16 +44,14 @@ public class ComicJsonSaver extends ComicSaver {
         int index = 0;
         boolean ex = false;
 
-        JsonObject webtoon = new JsonObject();
-        webtoons.add(webtoon);
+        ObjectNode webtoon = webtoons.addObject();
 
-        webtoon.addProperty("title", title);
-        webtoon.addProperty("no", webtoons.size());
-        JsonArray imgs = new JsonArray();
-        webtoon.add("imgs", imgs);
+        webtoon.put("title", title);
+        webtoon.put("no", webtoons.size());
+        ArrayNode imgs = webtoon.putArray("imgs");
         for (String s : src){
-            JsonObject img = new JsonObject();
-            img.addProperty("seq", ++index);
+            ObjectNode img = imgs.addObject();
+            img.put("seq", ++index);
             URLConnection con;
             try {
                 con = build(s);
@@ -62,7 +62,7 @@ public class ComicJsonSaver extends ComicSaver {
                 continue;
             }
             String type = con.getContentType();
-            img.addProperty("type", type);
+            img.put("type", type);
 
             ByteArrayOutputStream baos;
             try {
@@ -81,10 +81,7 @@ public class ComicJsonSaver extends ComicSaver {
                 continue;
             }
 
-            img.addProperty("data", new String(Base64.getEncoder().encode(baos.toByteArray())));
-
-            imgs.add(img);
-
+            img.put("data", new String(Base64.getEncoder().encode(baos.toByteArray())));
         }
 
         if(ex) throw new ComicDownloadException("Partially downloaded");
@@ -93,10 +90,7 @@ public class ComicJsonSaver extends ComicSaver {
     public void write() throws IOException {
         File file = new File(getPath());
         file.getParentFile().mkdirs();
-        FileWriter fw = new FileWriter(file);
-        new Gson().toJson(object, fw);
-        fw.close();
-
-
+        ObjectMapper mapper = ObjectMapperConfiguration.getMapper();
+        mapper.writeTree(mapper.getFactory().createGenerator(file, JsonEncoding.UTF8), object);
     }
 }

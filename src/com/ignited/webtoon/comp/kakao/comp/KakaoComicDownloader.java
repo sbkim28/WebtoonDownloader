@@ -1,13 +1,13 @@
 package com.ignited.webtoon.comp.kakao.comp;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ignited.webtoon.extract.comic.ComicInfo;
 import com.ignited.webtoon.extract.comic.ComicSaver;
 import com.ignited.webtoon.extract.comic.ListDownloader;
 import com.ignited.webtoon.extract.comic.e.ComicDownloadException;
 import com.ignited.webtoon.extract.comic.e.ComicListInitException;
+import com.ignited.webtoon.util.ObjectMapperConfiguration;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 
@@ -81,37 +81,39 @@ public class KakaoComicDownloader extends ListDownloader {
                 .data("without_hidden", "true")
                 .execute();
 
-        JsonArray list = new JsonParser().parse(res.body()).getAsJsonObject().get("singles").getAsJsonArray();
+        ObjectMapper mapper = ObjectMapperConfiguration.getMapper();
+        JsonNode arr = mapper.readTree(res.body()).get("singles");
 
-        for (int i = 0; i < list.size(); ++i) {
-            JsonObject item = list.get(i).getAsJsonObject();
-            items.add(new Item(item.get("id").getAsString(), item.get("title").getAsString()));
+        for (JsonNode item : arr){
+            items.add(new Item(item.get("id").asText(), item.get("title").asText()));
         }
     }
 
     @Override
     protected List<String> getImages(int index) throws ComicDownloadException {
 
-        JsonObject obj;
+        ObjectMapper mapper = ObjectMapperConfiguration.getMapper();
+        JsonNode node;
         try {
             String s = Jsoup.connect(view)
                     .method(Connection.Method.POST)
                     .ignoreContentType(true)
                     .data("productId",items.get(index).getId())
                     .execute().body();
-            obj = new JsonParser().parse(s).getAsJsonObject();
+
+            node = mapper.readTree(s).get("downloadData").get("members");
         } catch (IOException e) {
             throw new ComicDownloadException(e);
         }
 
         List<String> ret = new ArrayList<>();
-        JsonObject data = obj.get("downloadData").getAsJsonObject().get("members").getAsJsonObject();
-        String drmURL = data.get("sAtsServerUrl").getAsString();
-        JsonArray files = data.get("files").getAsJsonArray();
+        String drmURL = node.get("sAtsServerUrl").asText();
+        JsonNode files = node.get("files");
 
-        for(int i = 0; i<files.size(); ++i){
-            ret.add(drmURL + files.get(i).getAsJsonObject().get("secureUrl").getAsString());
+        for(JsonNode file : files){
+            ret.add(drmURL + file.get("secureUrl").asText());
         }
+
 
         return ret;
     }

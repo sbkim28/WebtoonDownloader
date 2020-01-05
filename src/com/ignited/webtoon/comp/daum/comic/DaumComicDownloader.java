@@ -1,18 +1,18 @@
 package com.ignited.webtoon.comp.daum.comic;
 
-import com.google.gson.*;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ignited.webtoon.extract.comic.ComicInfo;
 import com.ignited.webtoon.extract.comic.ComicSaver;
 import com.ignited.webtoon.extract.comic.ListDownloader;
 import com.ignited.webtoon.extract.comic.e.ComicAccessException;
 import com.ignited.webtoon.extract.comic.e.ComicDownloadException;
 import com.ignited.webtoon.extract.comic.e.ComicListInitException;
+import com.ignited.webtoon.util.ObjectMapperConfiguration;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -70,15 +70,18 @@ public class DaumComicDownloader extends ListDownloader {
         if(!"DAUM".equals(info.getType())) throw new IllegalArgumentException("Unmatching comic type. (expected=DAUM, type=" + info.getType() + ")");
         items = new ArrayList<>();
 
-        JsonArray array = new JsonParser().parse(new InputStreamReader(new URL(listUrl + info.getId()).openStream(), "UTF-8")).getAsJsonObject().get("data")
-                .getAsJsonObject().get("webtoon").getAsJsonObject().get("webtoonEpisodes").getAsJsonArray();
-        List<JsonObject> list = new ArrayList<>();
-        for(int i = 0;i<array.size();++i){
-            list.add(array.get(i).getAsJsonObject());
-        }
-        list.sort(Comparator.comparingInt(o -> o.get("episode").getAsInt()));
-        for(JsonObject object : list) {
-            items.add(new Item(object.get("id").getAsString(), object.get("title").getAsString()));
+        ObjectMapper mapper = ObjectMapperConfiguration.getMapper();
+        JsonNode node = mapper.readTree(new URL(listUrl + info.getId()))
+                .get("data").get("webtoon").get("webtoonEpisodes");
+
+        int i = 1;
+
+        for (JsonNode item : node){
+
+            assert item.get("episode").asInt() == i;
+            ++i;
+
+            items.add(new Item(item.get("id").asText(), item.get("title").asText()));
         }
 
     }
@@ -87,6 +90,29 @@ public class DaumComicDownloader extends ListDownloader {
     @Override
     protected List<String> getImages(int index) throws ComicDownloadException {
         String url = viewUrl + items.get(index).getId();
+
+        ObjectMapper mapper = ObjectMapperConfiguration.getMapper();
+        JsonNode arr;
+        try {
+            JsonNode node = mapper.readTree(new URL(url));
+
+            String status = node.get("result").get("status").asText();
+            if(!status.equals("200")){
+                throw new ComicAccessException(url, status);
+            }
+            arr = node.get("data");
+        } catch (IOException e) {
+            throw new ComicDownloadException("Connecting and getting data failed. url='" + url + "'.", e);
+        }
+
+        List<String> ret = new ArrayList<>();
+        for (JsonNode item : arr){
+            ret.add(item.get("url").asText());
+        }
+
+        return ret;
+
+        /*
         JsonObject obj;
         try {
             obj = new JsonParser().parse(new InputStreamReader(new URL(url).openStream(), "UTF-8")).getAsJsonObject();
@@ -107,6 +133,6 @@ public class DaumComicDownloader extends ListDownloader {
         for(int i = 0;i<array.size();++i){
             ret.add(array.get(i).getAsJsonObject().get("url").getAsString());
         }
-        return ret;
+        return ret;*/
     }
 }

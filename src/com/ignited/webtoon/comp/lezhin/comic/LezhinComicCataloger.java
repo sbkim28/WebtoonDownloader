@@ -1,10 +1,10 @@
 package com.ignited.webtoon.comp.lezhin.comic;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ignited.webtoon.extract.comic.Cataloger;
 import com.ignited.webtoon.extract.comic.ComicInfo;
+import com.ignited.webtoon.util.ObjectMapperConfiguration;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -49,19 +49,34 @@ public class LezhinComicCataloger extends Cataloger {
         List<ComicInfo> infos = new ArrayList<>();
         boolean hasNext;
         int offset = 0;
+        ObjectMapper mapper = ObjectMapperConfiguration.getMapper();
         do{
             HttpURLConnection connection = (HttpURLConnection) new URL(url + offset + limit + lim).openConnection();
             connection.setRequestProperty("x-lz-locale", "ko_KR");
-            JsonObject object =  new JsonParser().parse(new InputStreamReader(connection.getInputStream(), "UTF-8")).getAsJsonObject();
-            hasNext = object.get("hasNext").getAsBoolean();
-            JsonArray arr = object.get("data").getAsJsonArray();
-            for(int i = 0;i<arr.size();++i){
-                JsonObject item = arr.get(i).getAsJsonObject();
-                String id = item.get("id").getAsString();
-                String alias = item.get("alias").getAsString();
-                String title = item.get("title").getAsString();
-                infos.add(new LezhinComicInfo(id, title, alias, String.format(thumb, id)));
+
+            JsonNode node = mapper.readTree(connection.getInputStream());
+            hasNext = node.get("hasNext").asBoolean();
+            JsonNode arr = node.get("data");
+            for (JsonNode item : arr){
+                String id = item.get("id").asText();
+                infos.add(new LezhinComicInfo(
+                        id,
+                        item.get("title").asText(),
+                        item.get("alias").asText(),
+                        String.format(thumb, id)
+                ));
             }
+
+//            JsonObject object =  new JsonParser().parse(new InputStreamReader(connection.getInputStream(), "UTF-8")).getAsJsonObject();
+//            hasNext = object.get("hasNext").getAsBoolean();
+//            JsonArray arr = object.get("data").getAsJsonArray();
+//            for(int i = 0;i<arr.size();++i){
+//                JsonObject item = arr.get(i).getAsJsonObject();
+//                String id = item.get("id").getAsString();
+//                String alias = item.get("alias").getAsString();
+//                String title = item.get("title").getAsString();
+//                infos.add(new LezhinComicInfo(id, title, alias, String.format(thumb, id)));
+//            }
             offset += lim;
         }while (hasNext);
         return infos;

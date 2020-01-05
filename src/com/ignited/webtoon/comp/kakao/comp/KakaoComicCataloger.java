@@ -1,10 +1,10 @@
 package com.ignited.webtoon.comp.kakao.comp;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ignited.webtoon.extract.comic.Cataloger;
 import com.ignited.webtoon.extract.comic.ComicInfo;
+import com.ignited.webtoon.util.ObjectMapperConfiguration;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -43,16 +43,17 @@ public class KakaoComicCataloger extends Cataloger {
 
         List<ComicInfo> infos = new ArrayList<>();
 
+        ObjectMapper mapper = ObjectMapperConfiguration.getMapper();
+        JsonNode arr = mapper.readTree(new URL(list_url)).get("section_containers")
+                .get(0).get("section_series").get(0).get("list");
 
-        JsonArray series = new JsonParser().parse(new InputStreamReader(new URL(list_url).openStream(), "utf-8")).getAsJsonObject().get("section_containers").getAsJsonArray()
-                .get(0).getAsJsonObject().get("section_series").getAsJsonArray().get(0).getAsJsonObject().get("list").getAsJsonArray();
-
-        for(int i = 0;i<series.size();++i){
-            JsonObject item = series.get(i).getAsJsonObject();
-            ComicInfo info = new ComicInfo(item.get("series_id").getAsString(), item.get("title").getAsString(),
-                    "KAKAO" ,thumb_url + item.get("image").getAsString());
-
-            infos.add(info);
+        for (JsonNode node : arr){
+            infos.add(new ComicInfo(
+                    node.get("series_id").asText(),
+                    node.get("title").asText(),
+                    "KAKAO",
+                    thumb_url + node.get("image").asText()
+            ));
         }
         return infos;
 

@@ -1,7 +1,7 @@
 package com.ignited.webtoon.comp.naver.data;
 
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.ignited.webtoon.control.login.Login;
 import com.ignited.webtoon.control.login.LoginFailException;
 import com.ignited.webtoon.control.login.WrongCaptchaException;
@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@JsonIgnoreProperties({"chptchakey", "onCaptcha"})
 public class NaverLogin extends Login{
 
     private static final String CAPTCHA = "https://nid.naver.com/login/image/captcha/nhncaptchav4.gif?1&key=";
@@ -88,7 +89,6 @@ public class NaverLogin extends Login{
                     .data(data)
                     .method(Connection.Method.POST)
                     .execute();
-
             body = res.parse();
         } catch (IOException e) {
             throw new LoginFailException("Connection failed. (url=" + LOGIN + ", data=" + data + ")",e);
@@ -109,12 +109,12 @@ public class NaverLogin extends Login{
         if(m.find()){
             String redirect = m.group(0);
             redirect = redirect.substring(redirect.indexOf("\"") + 1, redirect.lastIndexOf("\""));
-
-            try {
-                loginCookies = Jsoup.connect(redirect).execute().cookies();
-            } catch (IOException e) {
-                throw new LoginFailException("Getting login data failed. (redirect=" + redirect + ", body=" + strBody + ")" , e);
-            }
+            //try {
+                //loginCookies = Jsoup.connect(redirect).cookies(res.cookies()).execute().cookies();
+                loginCookies = res.cookies();
+            //} catch (IOException e) {
+              //  throw new LoginFailException("Getting login data failed. (redirect=" + redirect + ", body=" + strBody + ")" , e);
+            //}
         }else {
             throw new WrongIdPasswordException("Wrong id or password (id=" + getId()+ ", pw=" + getPassword() + ", data = " + data + ", body=" + strBody + ")", getId(), getPassword());
         }
@@ -138,21 +138,5 @@ public class NaverLogin extends Login{
 
     private String[] getKeys() throws IOException {
         return Jsoup.connect(KEYS).get().text().split(",");
-    }
-
-    @Override
-    protected ExclusionStrategy getExclusionStrategy() {
-        return new ExclusionStrategy() {
-            @Override
-            public boolean shouldSkipField(FieldAttributes field) {
-                return field.getName().equals("chptchakey")
-                        || field.getName().equals("onCaptcha");
-            }
-
-            @Override
-            public boolean shouldSkipClass(Class<?> aClass) {
-                return false;
-            }
-        };
     }
 }

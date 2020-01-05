@@ -1,14 +1,14 @@
 package com.ignited.webtoon.comp.lezhin.comic;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ignited.webtoon.extract.comic.ComicInfo;
 import com.ignited.webtoon.extract.comic.ComicSaver;
 import com.ignited.webtoon.extract.comic.ListDownloader;
 import com.ignited.webtoon.extract.comic.e.ComicAccessException;
 import com.ignited.webtoon.extract.comic.e.ComicDownloadException;
 import com.ignited.webtoon.extract.comic.e.ComicListInitException;
+import com.ignited.webtoon.util.ObjectMapperConfiguration;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -78,15 +78,28 @@ public class LezhinComicDownloader extends ListDownloader {
         String s = doc.toString();
         s = s.substring(s.indexOf("__LZ_PRODUCT__ = ") + 17);
         s = s.substring(0,s.indexOf("};") + 1);
-        JsonObject product = new JsonParser().parse(s).getAsJsonObject();
-        JsonArray all = product.get("all").getAsJsonArray();
-       for (int i = 0;i<all.size();++i){
-            JsonObject item = all.get(i).getAsJsonObject();
-            String id = item.get("id").getAsString();
-            String title = item.get("display").getAsJsonObject().get("title").getAsString();
-            int seq = item.get("seq").getAsInt();
-            items.add(new SeqItem(id,title,seq));
+
+        ObjectMapper mapper = ObjectMapperConfiguration.getMapper();
+        JsonNode node = mapper.readTree(s)
+                .get("all");
+        for (JsonNode item : node){
+            items.add(new SeqItem(
+                    item.get("id").asText(),
+                    item.get("display").get("title").asText(),
+                    item.get("seq").asInt()
+            ));
         }
+
+//        JsonObject product = new JsonParser().parse(s).getAsJsonObject();
+//        JsonArray all = product.get("all").getAsJsonArray();
+//        for (int i = 0;i<all.size();++i){
+//            JsonObject item = all.get(i).getAsJsonObject();
+//            String id = item.get("id").getAsString();
+//            String title = item.get("display").getAsJsonObject().get("title").getAsString();
+//            int seq = item.get("seq").getAsInt();
+//            items.add(new SeqItem(id,title,seq));
+//        }
+
         items.sort(Comparator.comparingInt(o -> ((SeqItem) o).seq));
     }
 

@@ -50,11 +50,16 @@ public abstract class HTMLTranslator implements Translator{
         StringBuilder htmlBuilder = new StringBuilder();
         htmlBuilder.append("<html><head><meta charset=\"UTF-8\"><title>")
                 .append(Compatamizer.toHTML(title)) // position:absolute;left:50%; transform:translate(-50%, 0%)
-                .append("</title><style>.layer{margin: auto;\nwidth: 50%;}</style></head><body style=\"margin: 0px; background: #")
+                .append("</title>")
+                //.append("<style>.layer{margin: auto;\nwidth: 50%;}</style>")
+                .append("</head><body style=\"margin: 0px; background: #")
                 .append(background)
-                .append(";\"><div class=\"layer\">");
+                .append(";\"><div class=\"layer\">")
+                .append("<center>");
         appendImage(htmlBuilder);
-        htmlBuilder.append("</div></body></html>");
+        htmlBuilder
+                .append("</center>")
+                .append("</div></body></html>");
         return htmlBuilder.toString();
     }
 
